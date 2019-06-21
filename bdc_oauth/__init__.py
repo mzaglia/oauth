@@ -4,8 +4,8 @@ from flask_bcrypt import Bcrypt
 from flask_compress import Compress
 from flask_wtf.csrf import CSRFProtect
 
-from api.utils.base_mongo import mongo
-from api.utils.base_redis import redis
+from bdc_oauth.utils.base_mongo import mongo
+from bdc_oauth.utils.base_redis import redis
 
 flask_bcrypt = Bcrypt()
 
@@ -30,7 +30,7 @@ def create_app(config_name):
         compress = Compress()
         compress.init_app(app)
 
-        return app
+    return app
 
 
 class PrefixMiddleware(object):

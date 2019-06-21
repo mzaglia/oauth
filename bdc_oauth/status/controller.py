@@ -1,8 +1,8 @@
 import os
 from flask_restplus import Resource
 
-from api.status import ns
-from api.utils.helpers import return_response
+from bdc_oauth.status import ns
+from bdc_oauth.utils.helpers import return_response
 
 api = ns
 

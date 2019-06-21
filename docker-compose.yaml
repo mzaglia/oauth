@@ -1,29 +1,27 @@
 version: '3'
 
 services:
-  bdc-oauth:
-    build: ./
-    container_name: bdc-oauth
-    environment:
-      - PORT=5001
-      - MONGO_USER=bdc
-      - MONGO_PASSWORD=bdc#key#2019
-      - MONGO_HOST=mongo-oauth
-      - MONGO_PORT=27017
-      - MONGO_DBNAME=bdc_client
-      - REDIS_HOST=redis
-      - MONGO_PORT=6379
-      - REDIS_PASSWORD=passRedis
-      - ENVIRONMENT=DevelopmentConfig
-      - KEYSYSTEM=Key#2019@BDC#hash
-    volumes:
-      - "./:/usr/src/app"
-    working_dir: "/usr/src/app"
-    ports:
-      - "5015:5000"
-    restart: always
-    networks:
-      - bdc-application
+  # bdc-oauth:
+  #   build: ./
+  #   container_name: bdc-oauth
+  #   environment:
+  #     - PORT=5001
+  #     - MONGO_USER=bdc
+  #     - MONGO_PASSWORD=bdc#key#2019
+  #     - MONGO_HOST=mongo-oauth
+  #     - MONGO_PORT=27017
+  #     - MONGO_DBNAME=bdc_client
+  #     - REDIS_HOST=redis-oauth
+  #     - REDIS_PORT=6379
+  #     - REDIS_PASSWORD=passRedis
+  #     - ENVIRONMENT=DevelopmentConfig
+  #     - KEYSYSTEM=Key#2019@BDC#hash
+  #     - KEYJWT=key#jwt#2019
+  #   ports:
+  #     - "5015:5000"
+  #   restart: always
+  #   networks:
+  #     - bdc-application
 
   mongo-oauth:
     image: mongo
@@ -39,9 +37,9 @@ services:
     networks:
       - bdc-application
 
-  redis:
+  redis-oauth:
     image: bitnami/redis:latest
-    container_name: redis
+    container_name: redis-oauth
     environment:
       - REDIS_PASSWORD=passRedis
     ports:

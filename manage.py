@@ -3,9 +3,9 @@ import os
 from flask_cors import CORS
 from flask_script import Manager
 
-from api import create_app
-from api.blueprint import blueprint
-from api.config import get_settings
+from bdc_oauth import create_app
+from bdc_oauth.blueprint import blueprint
+from bdc_oauth.config import get_settings
 
 app = create_app(get_settings(os.environ.get('ENVIRONMENT', 'DevelopmentConfig')))
 app.register_blueprint(blueprint)
