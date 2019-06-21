@@ -1,0 +1,35 @@
+openapi: 3.0.0
+
+info:
+  description: Web service to autentication (Oauth 2) - Brazil Data Cube
+  version: "1.0"
+  title: API Oauth2
+  contact:
+    name: Brazil Data Cube
+    email: example@example.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+tags:
+  - name: "status"
+    description: "Status services"
+    
+paths:
+  /:
+    get:
+      tags:
+        - "status"
+      summary: "Status application"
+      description: "return status of application"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  success:
+                    type: boolean
