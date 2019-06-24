@@ -1,9 +1,9 @@
-FROM python:3.6.8-jessie
+FROM ubuntu:18.04
 
 ENV APP_DIR /usr/src/app
 
-RUN	apt-get update && \
-    apt-get install -y curl libssl-dev libffi-dev locales locales-all nano git && \
+RUN apt-get update && \
+    apt-get install -y python3-pip curl libssl-dev libpq-dev python-dev locales locales-all nano git && \
     pip3 install --upgrade pip && \
     rm -rf /var/cache/apk/*
 

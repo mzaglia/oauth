@@ -2,7 +2,6 @@ import json
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_compress import Compress
-from flask_cors import CORS
 from flask_wtf.csrf import CSRFProtect
 
 from api.utils.base_mongo import mongo
@@ -16,7 +15,6 @@ def create_app(config_name):
 
     with app.app_context():
         CSRFProtect(app)
-        CORS(app, resources={r'/d/*': {"origins": '*'}})
 
         app.config.from_object(config_name)
         app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix='/oauth')
