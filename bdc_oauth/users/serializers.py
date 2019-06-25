@@ -8,7 +8,7 @@ def get_user_serializer(use_password=False):
         "email": fields.String(),
         "institution": fields.String(),
         "occupation": fields.String(),
-        "created_at": fields.String(),
+        "created_at": fields.DateTime(),
         "clients_authorized": fields.List(fields.String())
     }
     if use_password:

@@ -15,7 +15,7 @@ def user_password():
     }
 
 def user_change_password():
-    return dict(**user_password(), **{
+    return dict(user_password(), **{
         'old_password': {"type": "string", "empty": False, "required": True},
     })
 
