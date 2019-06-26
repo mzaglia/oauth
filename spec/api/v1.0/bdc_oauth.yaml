@@ -16,7 +16,7 @@ tags:
     description: "Status services"
     
 paths:
-  /:
+  /oauth/status:
     get:
       tags:
         - "status"
@@ -33,3 +33,4 @@ paths:
                     type: string
                   success:
                     type: boolean
+                    
