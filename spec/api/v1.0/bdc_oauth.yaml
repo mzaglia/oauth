@@ -14,6 +14,10 @@ info:
 tags:
   - name: "status"
     description: "Status services"
+  - name: "users"
+    description: "Users manager"
+  - name: "clients"
+    description: "Clients manager"
     
 paths:
   /oauth/status:
@@ -33,4 +37,235 @@ paths:
                     type: string
                   success:
                     type: boolean
-                    
+  
+  /oauth/users/:
+    get:
+      tags:
+        - "users"
+      summary: "Users"
+      description: "Returns a list of active users"
+      responses:
+        200:
+          description: "Array of users"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items: "#/response/schemas/User"
+    
+    post:
+      tags:
+        - "users"
+      summary: "Create User"
+      description: "Create new user"
+      requestBody:
+        description: "Initial informations to create user"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/request/schemas/UserFull"
+      responses:
+        201:
+          description: "Information of new user"
+          content:
+            application/json:
+              schema:
+                $ref: "#/response/schemas/User"
+  
+  /oauth/users/{id}:
+    get:
+      tags:
+        - "users"
+      summary: "User by ID"
+      description: "Returns information of user by ID"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "User ID"
+      responses:
+        200:
+          description: "User informations"
+          content:
+              application/json:
+                schema:
+                  $ref: "#/response/schemas/User"
+    
+    put:
+      tags:
+        - "users"
+      summary: "Update User"
+      description: "Update informations of user"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "User ID"
+      requestBody:
+        description: "new informations to update user"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/request/schemas/User"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+
+    delete:
+      tags:
+        - "users"
+      summary: "Delete User"
+      description: "Deleting a user"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "User ID"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+
+  /oauth/users/change-password/{id}:
+    put:
+      tags:
+        - "users"
+      summary: "Change Password"
+      description: "Change user password"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "User ID"
+      requestBody:
+        description: "User password"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/request/schemas/UserPassword"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+    
+  /oauth/users/{id}/clients:
+    get:
+      tags:
+        - "users"
+      summary: "List Clients By User"
+      description: "List clients of a given user"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "User ID"
+      responses:
+        200:
+          description: Clients informations
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    clients:
+                      type: array
+                      items: "#/response/schemas/Client"
+
+request:
+  schemas:
+    UserFull:
+      type: object
+      properties:
+        name:
+          type: string 
+        email:
+          type: integer 
+        institution:
+          type: string 
+        occupation:
+          type: string 
+        password:
+          type: string 
+        confirm_password:
+          type: string
+    User:
+      type: object
+      properties:
+        name:
+          type: string 
+        email:
+          type: integer 
+        institution:
+          type: string 
+        occupation:
+          type: string
+    UserPassword:
+      type: object
+      properties:
+        password:
+          type: string 
+        confirm_password:
+          type: string
+    
+response:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string 
+        name:
+          type: string 
+        email:
+          type: integer 
+        institution:
+          type: string 
+        occupation:
+          type: string 
+        created_at:
+          type: datetime
+        clients_authorized:
+          type: array
+          items:
+            type: string
+        credentials:
+          type: object
+          properties:
+            username:
+              type: string
+            grants:
+              type: array
+              items:
+                type: string
+    
