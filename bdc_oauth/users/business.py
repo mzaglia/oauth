@@ -125,7 +125,34 @@ class UsersBusiness():
     def list_clients_authorized(cls, id):
         model = cls.init_infos()['model']
 
-        clients = model.find_one({"_id": ObjectId(id), "deleted_at": None}, {"_id": 0, "clients_authorized": 1})
-        # TODO: implement lookup with clients collection
+        clients = model.aggregate([ 
+            {
+                "$unwind": "$clients_authorized"
+            },
+            { 
+                "$lookup": {
+                    "from": "clients",
+                    "localField": "clients_authorized",
+                    "foreignField": "_id",
+                    "as": "clients"
+                }
+            },
+            {
+                "$match": {
+                    "_id": ObjectId(id), 
+                    "deleted_at": None,
+                    "$or": [
+                        { "clients.expired_at": None },
+                        { "clients.expired_at": { "$gt": datetime.now() } }
+                    ]
+                }
+            }, 
+            {
+                "$project": {
+                    "_id": 0,
+                    "clients": 1
+                }
+            }
+        ])
 
-        return clients
+        return list(clients)

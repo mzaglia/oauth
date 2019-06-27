@@ -6,6 +6,7 @@ from bdc_oauth.users import ns
 from bdc_oauth.users.business import UsersBusiness
 from bdc_oauth.users.parsers import validate
 from bdc_oauth.users.serializers import get_user_serializer, get_users_serializer
+from bdc_oauth.clients.serializers import get_clients_serializer
 from bdc_oauth.utils.helpers import return_response
 # from bdc_oauth.utils.decorators import jwt_required
 
@@ -106,8 +107,8 @@ class UserController(Resource):
             """
             Endpoint responsável por aplicar o soft_delete em um usuário (inativação)
             """
-            user = UsersBusiness.delete(id)
-            if not user:
+            status = UsersBusiness.delete(id)
+            if not status:
                 return return_response({
                     "success": False,
                     "message": "User not Found!"
@@ -164,10 +165,9 @@ class UserClientsController(Resource):
             Endpoint responsável por listar todos os clientes autorizados de um determinado usuário
             """
             clients = UsersBusiness.list_clients_authorized(id)
-            return return_response(clients, 200)
+            clients = clients[0]['clients'] if len(clients) else []
 
-            # TODO: implement serializer to clients infos
-            # return marshal({"clients_authorized": clients}, get_users_serializer()), 200
+            return marshal({"clients": clients}, get_clients_serializer()), 200
 
         except Exception as e:
             return return_response({
