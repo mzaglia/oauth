@@ -1,3 +1,4 @@
+from datetime import datetime
 from cerberus import Validator
 
 def to_date(s):
@@ -5,17 +6,21 @@ def to_date(s):
 
 def client_base():
     return {
-        'name': {"type": "string", "empty": False, "required": True},
-        'uri': {"type": "string", "empty": False, "required": True},
-        'scope': {"type": "list", "empty": False, "required": True},
+        'client_name': {"type": "string", "empty": False, "required": True},
+        'client_uri': {"type": "string", "empty": False, "required": True},
         'redirect_uri': {"type": "string", "empty": False, "required": True}
     }
 
-def client_create():
-    return dict(client_base(), **{
+def date_expiration():
+    return {
         'expired_at': {"type": "date", "coerce": to_date, "required": False, "empty": True}
-    })
+    }
 
+def client_create():
+    return dict(client_base(), **date_expiration(), **{
+        'scope': {"type": "list", "empty": False, "required": True}
+    })
+    
 
 def validate(data, type_schema):
     schema = eval('{}()'.format(type_schema))

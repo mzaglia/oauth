@@ -1,10 +1,13 @@
 import jwt
 import json
+
 from copy import deepcopy
 from datetime import datetime, timedelta
 from random import randint
 from bson.objectid import ObjectId
 
+from bdc_oauth.users.business import UsersBusiness
+from bdc_oauth.utils.helpers import random_string, valid_scope_auth
 from bdc_oauth.utils.base_mongo import mongo
 
 class ClientsBusiness():
@@ -17,7 +20,7 @@ class ClientsBusiness():
 
     @classmethod
     def get_all(cls):
-        model = cls.init_infos()['model']
+        model = cls.init_infos()['model']        
 
         clients = model.find({
             "$or": [
@@ -31,32 +34,156 @@ class ClientsBusiness():
     def get_by_id(cls, id):
         model = cls.init_infos()['model']
 
-        user = model.find_one({
+        client = model.find_one({
             "_id": ObjectId(id), 
             "$or": [
                 { "expired_at": {"$gt": datetime.now()} },
                 { "expired_at": None }
             ]
         })
-        return user
-
-    @classmethod
-    def create(cls, user_id, client_infos):
-        pass
-
-    @classmethod
-    def update(cls, id, client_infos):
-        pass  
-
-    @classmethod
-    def delete(cls, id):
-        pass
-
-    @classmethod
-    def disable(cls, id):
-        pass
+        return client
 
     @classmethod
     def list_by_userid(cls, user_id):
-        pass
+        model = cls.init_infos()['model']
+
+        clients = model.find({
+            "user_id": ObjectId(user_id),
+            "$or": [
+                { "expired_at": {"$gt": datetime.now()} },
+                { "expired_at": None }
+            ]
+        })
+        return clients
+
+    @classmethod
+    def create(cls, user_id, client_infos):
+        model = cls.init_infos()['model']
+
+        user = UsersBusiness.get_by_id(user_id)
+        if not user:
+            raise Exception('User not Found!')
+        
+        """
+        Verifica se já existe um cliente com o mesmo nome
+        """
+        client = model.find_one({
+            "client_name": client_infos['client_name'],
+            "$or": [
+                { "expired_at": {"$gt": datetime.now()} },
+                { "expired_at": None }
+            ]
+        })
+        if client:
+            raise Exception('A client with this name already exists')
+
+        """
+        Cria as credenciais do cliente
+        """
+        client_infos['user_id'] = user['_id']
+        client_infos['client_secret'] = random_string(24)
+        client_infos['created_at'] = datetime.now()
+        client_infos['expired_at'] = client_infos.get('expired_at', None)
+
+        if not valid_scope_auth(client_infos['scope']):
+            raise Exception('Scope not enabled!')
+
+        """ 
+        salva no mongodb
+        """
+        try:
+            model.insert_one(client_infos)
+            return client_infos
+            
+        except Exception:
+            return False  
+
+    @classmethod
+    def update(cls, id, client_infos):
+        model = cls.init_infos()['model']
+        
+        """ 
+        verifica se existe o cliente no banco
+        """
+        client = cls.get_by_id(id)
+        if not client:
+            raise Exception('Client not Found!')
+
+        """ 
+        atualiza no mongodb 
+        """
+        try:
+            model.update_one({"_id": ObjectId(id)}, {"$set": client_infos})
+            return True
+        except Exception:
+            return False 
+
+    @classmethod
+    def delete(cls, id):
+        model = cls.init_infos()['model']
+        
+        """ 
+        verifica se existe o cliente no banco
+        """
+        client = model.find_one({ "_id": ObjectId(id) })
+        if not client:
+            raise Exception('Client not Found!')
+
+        """ 
+        deleta no mongodb 
+        """
+        try:
+            model.delete_one({"_id": ObjectId(id)})
+            return True
+        except Exception:
+            return False
+
+    @classmethod
+    def update_date_expiration(cls, id, action, date):
+        model = cls.init_infos()['model']
+        
+        """ 
+        verifica se existe o cliente no banco
+        """
+        client = model.find_one({ "_id": ObjectId(id) })
+        if not client:
+            raise Exception('Client not Found!')
+        
+        client['expired_at'] = datetime.now() 
+        if action == 'enable':
+            if date and datetime.strptime(date, '%Y-%m-%d') <= datetime.now():
+                raise Exception('Expiration date must be greater than today date')
+            else:
+                client['expired_at'] = datetime.strptime(date, '%Y-%m-%d') if date else None
+
+        """ 
+        atualiza no mongodb 
+        """
+        try:
+            model.update_one({"_id": ObjectId(id)}, {"$set": client})
+            return True
+        except Exception:
+            return False 
+
+    @classmethod
+    def generate_new_secret(cls, id):
+        model = cls.init_infos()['model']
+        
+        """ 
+        verifica se existe o cliente no banco
+        """
+        client = cls.get_by_id(id)
+        if not client:
+            raise Exception('Client not Found!')
+
+        """ 
+        atualiza no mongodb 
+        """
+        try:
+            new_secret = random_string(24)
+            client['client_secret'] = new_secret 
+            model.update_one({"_id": ObjectId(id)}, {"$set": client})
+            return new_secret
+        except Exception:
+            return False 
     

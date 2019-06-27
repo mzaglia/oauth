@@ -5,7 +5,6 @@ def get_client_serializer():
     schema = {
         "_id": fields.String(),
         "user_id": fields.String(),
-        "client_id": fields.String(),
         "client_name": fields.String(),
         "client_secret": fields.String(),
         "client_uri": fields.String(),
