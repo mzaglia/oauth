@@ -1,4 +1,4 @@
-# Oauth Server - Brazil Data Cube
+# OAuth Server - Brazil Data Cube
 Oauth server for Brazil Data Cube applications
 
 ## Structure
