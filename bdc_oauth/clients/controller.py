@@ -32,7 +32,7 @@ class ClientsController(Resource):
     # @jwt_required
     def post(self):
         try:
-            # get to token
+            # TODO: get to token
             user_id = '5d12554d4d018840e6f65423'
 
             """

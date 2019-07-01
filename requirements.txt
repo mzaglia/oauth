@@ -13,7 +13,7 @@ python-dateutil==2.6.1
 python-editor==1.0.3
 pytz==2017.3
 six==1.11.0
-Werkzeug==0.14
+Werkzeug==0.14.1
 coverage==4.4.2
 requests==2.18.4
 simplejson==3.12.0
