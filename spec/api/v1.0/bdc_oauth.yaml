@@ -1,0 +1,546 @@
+openapi: 3.0.0
+
+info:
+  description: Web service to autentication (Oauth 2) - Brazil Data Cube
+  version: "1.0"
+  title: API Oauth2
+  contact:
+    name: Brazil Data Cube
+    email: example@example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+tags:
+  - name: "status"
+    description: "Status services"
+  - name: "users"
+    description: "Users manager"
+  - name: "clients"
+    description: "Clients manager"
+    
+paths:
+  /oauth/status:
+    get:
+      tags:
+        - "status"
+      summary: "Status application"
+      description: "return status of application"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  success:
+                    type: boolean
+  
+  /oauth/users/:
+    get:
+      tags:
+        - "users"
+      summary: "Users"
+      description: "Returns a list of active users"
+      responses:
+        200:
+          description: "Array of users"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items: 
+                      $ref: "#/response/schemas/User"
+    post:
+      tags:
+        - "users"
+      summary: "Create User"
+      description: "Create new user"
+      requestBody:
+        description: "Initial informations to create user"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/request/schemas/UserFull"
+      responses:
+        201:
+          description: "Information of new user"
+          content:
+            application/json:
+              schema:
+                $ref: "#/response/schemas/User"
+  
+  /oauth/users/{id}:
+    get:
+      tags:
+        - "users"
+      summary: "User by ID"
+      description: "Returns information of user by ID"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "User ID"
+      responses:
+        200:
+          description: "User informations"
+          content:
+              application/json:
+                schema:
+                  $ref: "#/response/schemas/User"
+    put:
+      tags:
+        - "users"
+      summary: "Update User"
+      description: "Update informations of user"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "User ID"
+      requestBody:
+        description: "new informations to update user"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/request/schemas/User"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+    delete:
+      tags:
+        - "users"
+      summary: "Delete User"
+      description: "Deleting a user"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "User ID"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+
+  /oauth/users/change-password/{id}:
+    put:
+      tags:
+        - "users"
+      summary: "Change Password"
+      description: "Change user password"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "User ID"
+      requestBody:
+        description: "User password"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/request/schemas/UserPassword"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+    
+  /oauth/users/{id}/clients:
+    get:
+      tags:
+        - "users"
+      summary: "List Clients By User"
+      description: "List clients of a given user"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "User ID"
+      responses:
+        200:
+          description: Clients informations
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    clients:
+                      type: array
+                      items: 
+                        $ref: "#/response/schemas/Client"
+  
+  /oauth/clients/:
+    get:
+      tags:
+        - "clients"
+      summary: "Clients"
+      description: "Returns a list of active clients"
+      responses:
+        200:
+          description: "Array of clients"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items: 
+                      $ref: "#/response/schemas/Client"
+    post:
+      tags:
+        - "clients"
+      summary: "Create Client"
+      description: "Create new client"
+      requestBody:
+        description: "Initial informations to create client"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/request/schemas/ClientFull"
+      responses:
+        201:
+          description: "Information of new client"
+          content:
+            application/json:
+              schema:
+                $ref: "#/response/schemas/Client"
+  
+  /oauth/clients/{id}:
+    get:
+      tags:
+        - "clients"
+      summary: "Client by ID"
+      description: "Returns information of client by ID"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "Client ID"
+      responses:
+        200:
+          description: "Client informations"
+          content:
+              application/json:
+                schema:
+                  $ref: "#/response/schemas/Client"
+    put:
+      tags:
+        - "clients"
+      summary: "Update Client"
+      description: "Update informations of client"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "Client ID"
+      requestBody:
+        description: "new informations to update client"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/request/schemas/Client"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+    delete:
+      tags:
+        - "clients"
+      summary: "Delete Client"
+      description: "Deleting a client"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "Client ID"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+
+  /oauth/clients/{id}/status/enable:
+    put:
+      tags:
+        - "clients"
+      summary: "Enable Client"
+      description: "Enable client or extend expiration date"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "Client ID"
+      requestBody:
+        description: "Date of expiration. If not has date set with null"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expired_at:
+                  type: datetime
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+
+  /oauth/clients/{id}/status/disable:
+    put:
+      tags:
+        - "clients"
+      summary: "Disable Client"
+      description: "Disable client"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "Client ID"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+    
+  /oauth/clients/{user_id}:
+    get:
+      tags:
+        - "clients"
+      summary: "List Client By UserId"
+      description: "List of clients created by a user"
+      parameters:
+        - in: "path"
+          name: "user_id"
+          required: true
+          description: "User ID"
+      responses:
+        200:
+          description: Clients informations
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    clients:
+                      type: array
+                      items: 
+                        $ref: "#/response/schemas/Client"
+
+  /oauth/clients/{id}/new-secret:
+    put:
+      tags:
+        - "clients"
+      summary: "Generate New Secret"
+      description: "To generate a new secret for a client"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          description: "Client ID"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  new_secret:
+                    type: string
+
+request:
+  schemas:
+    UserFull:
+      type: object
+      properties:
+        name:
+          type: string 
+          required: true
+        email:
+          type: integer 
+          required: true
+        institution:
+          type: string 
+        occupation:
+          type: string 
+        password:
+          type: string 
+          required: true
+        confirm_password:
+          type: string
+          required: true
+    User:
+      type: object
+      properties:
+        name:
+          type: string 
+          required: true
+        email:
+          type: integer 
+          required: true
+        institution:
+          type: string 
+        occupation:
+          type: string
+    UserPassword:
+      type: object
+      properties:
+        password:
+          type: string 
+          required: true
+        confirm_password:
+          type: string
+          required: true
+    ClientFull:
+      type: object
+      properties:
+        client_name:
+          type: string 
+          required: true
+        client_uri:
+          type: string 
+          required: true
+        redirect_uri:
+          type: string
+          required: true
+        scope:
+          type: array
+          required: true
+          items:
+            type: string
+        expired_at:
+          type: datetime
+    Client:
+      type: object
+      properties:
+        client_name:
+          type: string 
+          required: true
+        client_uri:
+          type: string 
+          required: true
+        redirect_uri:
+          type: string
+          required: true
+
+response:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string 
+        name:
+          type: string 
+        email:
+          type: integer 
+        institution:
+          type: string 
+        occupation:
+          type: string 
+        created_at:
+          type: datetime
+        clients_authorized:
+          type: array
+          items:
+            type: string
+        credentials:
+          type: object
+          properties:
+            username:
+              type: string
+            grants:
+              type: array
+              items:
+                type: string
+    Client:
+      type: object
+      properties:
+        _id:
+          type: string 
+        user_id:
+          type: string 
+        client_name:
+          type: string 
+        client_secret:
+          type: string 
+        client_uri:
+          type: string 
+        redirect_uri:
+          type: string
+        scope:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: datetime
+        expired_at:
+          type: datetime
+    
