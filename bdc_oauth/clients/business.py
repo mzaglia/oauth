@@ -1,10 +1,6 @@
-import jwt
-import json
-
-from copy import deepcopy
-from datetime import datetime, timedelta
-from random import randint
+from datetime import datetime
 from bson.objectid import ObjectId
+from werkzeug.exceptions import InternalServerError, BadRequest, NotFound, Conflict
 
 from bdc_oauth.users.business import UsersBusiness
 from bdc_oauth.utils.helpers import random_string, valid_scope_auth
@@ -34,14 +30,17 @@ class ClientsBusiness():
     def get_by_id(cls, id):
         model = cls.init_infos()['model']
 
-        client = model.find_one({
-            "_id": ObjectId(id), 
-            "$or": [
-                { "expired_at": {"$gt": datetime.now()} },
-                { "expired_at": None }
-            ]
-        })
-        return client
+        try:
+            client = model.find_one({
+                "_id": ObjectId(id), 
+                "$or": [
+                    { "expired_at": {"$gt": datetime.now()} },
+                    { "expired_at": None }
+                ]
+            })
+            return client
+        except Exception:
+            raise NotFound("Client not Found!")
 
     @classmethod
     def list_by_userid(cls, user_id):
@@ -62,7 +61,7 @@ class ClientsBusiness():
 
         user = UsersBusiness.get_by_id(user_id)
         if not user:
-            raise Exception('User not Found!')
+            raise NotFound('User not Found!')
         
         """
         Verifica se já existe um cliente com o mesmo nome
@@ -75,7 +74,7 @@ class ClientsBusiness():
             ]
         })
         if client:
-            raise Exception('A client with this name already exists')
+            raise Conflict('A client with this name already exists')
 
         """
         Cria as credenciais do cliente
@@ -86,7 +85,7 @@ class ClientsBusiness():
         client_infos['expired_at'] = client_infos.get('expired_at', None)
 
         if not valid_scope_auth(client_infos['scope']):
-            raise Exception('Scope not enabled!')
+            raise BadRequest('Scope not enabled!')
 
         """ 
         salva no mongodb
@@ -107,7 +106,7 @@ class ClientsBusiness():
         """
         client = cls.get_by_id(id)
         if not client:
-            raise Exception('Client not Found!')
+            raise NotFound('Client not Found!')
 
         """ 
         atualiza no mongodb 
@@ -127,7 +126,7 @@ class ClientsBusiness():
         """
         client = model.find_one({ "_id": ObjectId(id) })
         if not client:
-            raise Exception('Client not Found!')
+            raise NotFound('Client not Found!')
 
         """ 
         deleta no mongodb 
@@ -147,12 +146,12 @@ class ClientsBusiness():
         """
         client = model.find_one({ "_id": ObjectId(id) })
         if not client:
-            raise Exception('Client not Found!')
+            raise NotFound('Client not Found!')
         
         client['expired_at'] = datetime.now() 
         if action == 'enable':
             if date and datetime.strptime(date, '%Y-%m-%d') <= datetime.now():
-                raise Exception('Expiration date must be greater than today date')
+                raise BadRequest('Expiration date must be greater than today date')
             else:
                 client['expired_at'] = datetime.strptime(date, '%Y-%m-%d') if date else None
 
@@ -174,7 +173,7 @@ class ClientsBusiness():
         """
         client = cls.get_by_id(id)
         if not client:
-            raise Exception('Client not Found!')
+            raise NotFound('Client not Found!')
 
         """ 
         atualiza no mongodb 

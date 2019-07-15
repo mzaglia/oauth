@@ -1,19 +1,9 @@
 import os
-
-from flask_cors import CORS
 from flask_script import Manager
 
-from bdc_oauth import create_app
-from bdc_oauth.blueprint import blueprint
-from bdc_oauth.config import get_settings
-
-app = create_app(get_settings(os.environ.get('ENVIRONMENT', 'DevelopmentConfig')))
-app.register_blueprint(blueprint)
+from bdc_oauth import app
 
 manager = Manager(app)
-
-CORS(app, resorces={r'/d/*': {"origins": '*'}})
-
 
 @manager.command
 def run():
@@ -24,7 +14,6 @@ def run():
         PORT = 5000
 
     app.run(HOST, PORT)
-
 
 if __name__ == '__main__':
     manager.run()

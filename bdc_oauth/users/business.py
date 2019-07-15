@@ -1,12 +1,9 @@
-import jwt
-import json
 from copy import deepcopy
-from datetime import datetime, timedelta
-from random import randint
-from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 from bson.objectid import ObjectId
+from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.exceptions import InternalServerError, NotFound, Conflict, Forbidden
 
-from bdc_oauth.config import Config
 from bdc_oauth.utils.base_mongo import mongo
 
 class UsersBusiness():
@@ -28,8 +25,11 @@ class UsersBusiness():
     def get_by_id(cls, id, return_password=0):
         model = cls.init_infos()['model']
 
-        user = model.find_one({"_id": ObjectId(id), "deleted_at": None}, {"credential.password": return_password})
-        return user
+        try:
+            user = model.find_one({"_id": ObjectId(id), "deleted_at": None}, {"credential.password": return_password})
+            return user
+        except Exception:
+            raise NotFound("Client not Found!")
 
     @classmethod
     def create(cls, infos_user):
@@ -40,7 +40,7 @@ class UsersBusiness():
         """
         user_exits = model.find_one({"email": infos_user["email"], "deleted_at": None})
         if user_exits:
-            raise Exception('Email already registered in the system!')
+            raise Conflict('Email already registered in the system!')
 
         infos_user['created_at'] = datetime.now()
         infos_user['deleted_at'] = None
@@ -64,7 +64,7 @@ class UsersBusiness():
             return infos_user
             
         except Exception:
-            return False  
+            return False
 
     @classmethod
     def update(cls, id, infos_user):
@@ -75,7 +75,7 @@ class UsersBusiness():
         """
         user = cls.get_by_id(id)
         if not user:
-            raise Exception('User not Found!')
+            raise NotFound('User not Found!')
 
         """ 
         salva no mongodb 
@@ -93,14 +93,14 @@ class UsersBusiness():
 
         user = cls.get_by_id(id)
         if not user:
-            raise Exception('User not Found!')
+            raise NotFound('User not Found!')
 
         user['deleted_at'] = datetime.now()  
         try:
             model.update_one({"_id": ObjectId(id)}, {"$set": user})
             return True
         except Exception as e:
-            raise Exception("Deleting user error!")
+            raise InternalServerError("Deleting user error!")
     
 
     @classmethod
@@ -109,10 +109,10 @@ class UsersBusiness():
 
         user = cls.get_by_id(id, return_password=1)
         if not user:
-            raise Exception('User not Found!')
+            raise NotFound('User not Found!')
 
         if check_password_hash(user['credential']['password'], password) is False:
-            raise Exception('Incorrent current password!')
+            raise Forbidden('Incorrent current password!')
 
         try:
             new_pass = generate_password_hash(new_password)
@@ -154,5 +154,4 @@ class UsersBusiness():
                 }
             }
         ])
-
         return list(clients)

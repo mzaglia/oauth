@@ -1,19 +1,16 @@
-import os
-from flask_restplus import Resource
+from bdc_core.utils.flask import APIResource
 
 from bdc_oauth.status import ns
-from bdc_oauth.utils.helpers import return_response
 
 api = ns
 
 @api.route('/')
-class StatusController(Resource):
+class StatusController(APIResource):
     
     def get(self):
         """
-        Endpoint responsável por retornar o status da aplicação
+        Returns application status
         """
-        return return_response({
-            "status": "Running",
-            "success": True
-        }, 200)
+        return {
+            "status": "Running"
+        }

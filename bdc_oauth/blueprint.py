@@ -6,7 +6,7 @@ from bdc_oauth.status.controller import api as status_ns
 from bdc_oauth.users.controller import api as users_ns
 from bdc_oauth.clients.controller import api as clients_ns
 
-blueprint = Blueprint('oauth', __name__)
+blueprint = Blueprint('oauth', __name__, url_prefix='/oauth')
 
 api = Api(blueprint, doc=False)
 

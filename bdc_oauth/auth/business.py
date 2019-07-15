@@ -1,10 +1,9 @@
 import jwt
-import json
 from copy import deepcopy
 from datetime import datetime, timedelta
-from random import randint
-from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
+from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.exceptions import BadRequest, NotFound
 
 from bdc_oauth.config import Config
 from bdc_oauth.users.business import UsersBusiness
@@ -23,7 +22,7 @@ class AuthBusiness():
             return 'Invalid token. Please login', False
 
     @staticmethod
-    def encode_auth_token(cls, user_id, grants, user_type):
+    def encode_auth_token(user_id, grants, user_type):
         payload = {
             'exp': datetime.utcnow() + timedelta(days=1, seconds=5),
             'iat': datetime.utcnow(),
@@ -45,10 +44,10 @@ class AuthBusiness():
 
         user = model.find_one({"credential.username": username, "deleted_at": None})
         if not user:
-            raise Exception('User not found!')
+            raise NotFound('User not found!')
         
         if check_password_hash(user['credential']['password'], password) is False:
-            raise Exception('Incorrect password!')
+            raise BadRequest('Incorrect password!')
         
         user_id = str(user['_id'])
         token = cls.encode_auth_token(user_id, user['credential']['grants'], 'user')
@@ -64,7 +63,7 @@ class AuthBusiness():
 
         user = UsersBusiness.get_by_id(user_id)
         if not user:
-            raise Exception('User not Found!')
+            raise NotFound('User not Found!')
 
         new_list = []
         if action == 'authorize':

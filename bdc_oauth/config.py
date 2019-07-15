@@ -30,5 +30,3 @@ class TestingConfig(Config):
     TESTING = True
     DEBUG = True
 
-key = Config.SECRET_KEY
-
