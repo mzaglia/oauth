@@ -1,13 +1,13 @@
 {
   "name": "bdc-oauth-spec",
   "version": "1.0.0",
-  "description": "",
+  "description": "generate spec oauth API",
   "main": "index.js",
   "scripts": {
     "build": "redoc-cli bundle api/v1.0/bdc_oauth.yaml --output dist/index.html"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "redoc": "^2.0.0-rc.8-1",
     "redoc-cli": "^0.8.4"
