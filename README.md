@@ -22,6 +22,10 @@ After that, install Python dependencies with the following command:
 ```bash
 pip3 install -r requirements.txt
 ```
+use as package:
+```bash
+python3 setup.py install
+```
 
 ## Running
 
