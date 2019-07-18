@@ -5,8 +5,9 @@ import os, binascii
 def open_brower(url, time=1):
     """
     open new brower
-    @params {string} url to open in brower
-    @params {string} time delay to open brower
+    Args:
+        url: url to open in brower
+        time: time delay to open brower
     """
     threading.Timer(time, lambda: webbrowser.open(url) ).start()
     
@@ -14,6 +15,7 @@ def open_brower(url, time=1):
 def random_string(size=16):
     """
     generate random string
-    @params {int} string size
+    Args:
+        size: string size
     """
     return (binascii.hexlify(os.urandom(size))).decode('ascii')
