@@ -4,6 +4,7 @@ Oauth server for Brazil Data Cube applications
 ## Structure
 
 - [`bdc_oauth`](./bdc_oauth) python scripts to manage authetication (Oauth 2) in BDC
+- [`docs`](./docs) Documentation of bdc_oauth
 - [`spec`](./spec) Documentation of API bdc_oauth
 
 ## Installation
@@ -20,6 +21,10 @@ After that, install Python dependencies with the following command:
 
 ```bash
 pip3 install -r requirements.txt
+```
+if necessary, use as package:
+```bash
+python3 setup.py install
 ```
 
 ## Running

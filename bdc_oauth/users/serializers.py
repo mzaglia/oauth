@@ -1,5 +1,8 @@
-from flask_restplus import fields
+"""
+formatting the return of the user controllers
+"""
 
+from flask_restplus import fields
 
 def get_user_serializer(use_password=False):
     schema = {

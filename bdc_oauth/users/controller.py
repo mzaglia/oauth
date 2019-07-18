@@ -20,14 +20,14 @@ class UsersController(APIResource):
     # @jwt_required
     def get(self):
         """
-        Endpoint responsável listar os usuários
+        user list
         """
         users = UsersBusiness.get_all()
         return marshal({"users": users}, get_users_serializer())
     
     def post(self):
         """
-        Endpoint responsável criar um novo usuario
+        create new user
         """
         data, status = validate(request.json, 'user_create', validate_password=True)
         if status is False:
@@ -46,7 +46,7 @@ class UserController(APIResource):
     # @jwt_required
     def get(self, id): 
         """
-        Endpoint responsável listar infos de um usuário
+        user informations by id
         """
         user = UsersBusiness.get_by_id(id)
         if not user:
@@ -57,7 +57,7 @@ class UserController(APIResource):
     # @jwt_required
     def put(self, id):
         """
-        Endpoint responsável atualizar um usuario
+        update a user's information
         """
         data, status = validate(request.json, 'user_update')
         if status is False:
@@ -74,7 +74,7 @@ class UserController(APIResource):
     # @jwt_required
     def delete(self, id):
         """
-        Endpoint responsável por aplicar o soft_delete em um usuário (inativação)
+        apply soft_delete in user (disable)
         """
         status = UsersBusiness.delete(id)
         if not status:
@@ -91,7 +91,7 @@ class UserPassController(APIResource):
     # @jwt_required
     def put(self, id):
         """
-        Endpoint responsável por alterar a senha do usuário
+        change user password
         """
         data, status = validate(request.json, 'user_change_password', validate_password=True)
         if status is False:
@@ -112,7 +112,7 @@ class UserClientsController(APIResource):
     # @jwt_required
     def get(self, id):
         """
-        Endpoint responsável por listar todos os clientes autorizados de um determinado usuário
+        list all authorized clients of a particular user
         """
         clients = UsersBusiness.list_clients_authorized(id)
         clients = clients[0]['clients'] if len(clients) else []

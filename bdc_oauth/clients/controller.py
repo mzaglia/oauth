@@ -19,7 +19,7 @@ class ClientsController(APIResource):
     # @jwt_required
     def get(self):
         """
-        Endpoint responsável listar os clientes que não estão expirados
+        list clients that are not expired
         """
         clients = ClientsBusiness.get_all()
         return marshal({"clients": clients}, get_clients_serializer())
@@ -30,7 +30,7 @@ class ClientsController(APIResource):
         user_id = '5d1a1cc632a61a2718cd709a'
 
         """
-        Endpoint responsável criar um novo cliente
+        create new client
         """
         data, status = validate(request.json, 'client_create')
         if status is False:
@@ -50,7 +50,7 @@ class ClientController(APIResource):
     # @jwt_required
     def get(self, id): 
         """
-        Endpoint responsável listar infos de um cliente que não está expirado
+        list information from an active customer 
         """
         client = ClientsBusiness.get_by_id(id)
         if not client:
@@ -61,7 +61,7 @@ class ClientController(APIResource):
     # @jwt_required
     def put(self, id):
         """
-        Endpoint responsável atualizar um cliente
+        update client
         """
         data, status = validate(request.json, 'client_base')
         if status is False:
@@ -78,7 +78,7 @@ class ClientController(APIResource):
     # @jwt_required
     def delete(self, id):
         """
-        Endpoint responsável por deletar um cliente
+        delete client
         """
         status = ClientsBusiness.delete(id)
         if not status:
@@ -93,6 +93,10 @@ class ClientController(APIResource):
 class ClientStatusController(APIResource):
 
     def put(self, id, action):
+        """
+        enable or disable a client
+        """
+
         if action.lower() not in ['enable', 'disable']:
             raise BadRequest('Action not found. Set "enable or disable"!')
 
@@ -102,9 +106,6 @@ class ClientStatusController(APIResource):
             if status is False:
                 raise BadRequest(json.dumps(data))
 
-        """
-        Endpoint responsável por desativar ou ativar um Cliente
-        """
         status = ClientsBusiness.update_date_expiration(id, action, data.get('expired_at', None))
         if not status:
             raise NotFound("Client not Found!")
@@ -120,7 +121,7 @@ class AdminClientsController(APIResource):
     # @jwt_required
     def get(self, user_id):
         """
-        Endpoint responsável listar os clientes criado por um usuário e que não estão expirados
+        list clients actived by a user
         """
         clients = ClientsBusiness.list_by_userid(user_id)
         return marshal({"clients": clients}, get_clients_serializer())
@@ -132,7 +133,7 @@ class ClientCredentialsController(APIResource):
     # @jwt_required
     def put(self, id):
         """
-        Endpoint responsável por gerar uma nova secret para um client
+        generate new secret
         """
         secret = ClientsBusiness.generate_new_secret(id)
         if not secret:

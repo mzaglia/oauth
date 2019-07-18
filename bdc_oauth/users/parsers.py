@@ -1,3 +1,7 @@
+"""
+validation of user controllers schemas
+"""
+
 from cerberus import Validator
 
 def user_base():
