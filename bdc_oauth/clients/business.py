@@ -3,7 +3,7 @@ from bson.objectid import ObjectId
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound, Conflict
 
 from bdc_oauth.users.business import UsersBusiness
-from bdc_oauth.utils.helpers import random_string, valid_scope_auth
+from bdc_oauth.utils.helpers import random_string
 from bdc_oauth.utils.base_mongo import mongo
 
 class ClientsBusiness():
@@ -83,9 +83,6 @@ class ClientsBusiness():
         client_infos['client_secret'] = random_string(24)
         client_infos['created_at'] = datetime.now()
         client_infos['expired_at'] = client_infos.get('expired_at', None)
-
-        if not valid_scope_auth(client_infos['scope']):
-            raise BadRequest('Scope not enabled!')
 
         """ 
         save in mongodb

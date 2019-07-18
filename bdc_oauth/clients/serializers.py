@@ -1,5 +1,8 @@
-from flask_restplus import fields
+"""
+formatting the return of the client controllers
+"""
 
+from flask_restplus import fields
 
 def get_client_serializer():
     schema = {

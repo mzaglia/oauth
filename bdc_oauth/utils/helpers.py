@@ -2,14 +2,18 @@ import locale
 import threading, webbrowser
 import os, binascii
 
-def ope_brower(url, time=1):
+def open_brower(url, time=1):
+    """
+    open new brower
+    @params {string} url to open in brower
+    @params {string} time delay to open brower
+    """
     threading.Timer(time, lambda: webbrowser.open(url) ).start()
-
-def valid_scope_auth(list_scope):
-    for scope in list_scope:
-        if scope not in ['read']:
-            return True
-    return True
+    
 
 def random_string(size=16):
+    """
+    generate random string
+    @params {int} string size
+    """
     return (binascii.hexlify(os.urandom(size))).decode('ascii')
