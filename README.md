@@ -4,6 +4,7 @@ Oauth server for Brazil Data Cube applications
 ## Structure
 
 - [`bdc_oauth`](./bdc_oauth) python scripts to manage authetication (Oauth 2) in BDC
+- [`docs`](./docs) Documentation of bdc_oauth
 - [`spec`](./spec) Documentation of API bdc_oauth
 
 ## Installation

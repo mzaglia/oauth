@@ -15,7 +15,7 @@ class AuthController(APIResource):
     
     def post(self):
         """
-        Endpoint responsável por realizar o login no sistema
+        Logging in to the system
         """
         data, status = validate(request.json, 'login')
         if status is False:
@@ -23,7 +23,7 @@ class AuthController(APIResource):
 
         auth = AuthBusiness.login(data['username'], data['password'])
         if not auth:
-            raise inte('Error logging!')
+            raise InternalServerError('Error logging!')
 
         return auth
 
@@ -35,7 +35,7 @@ class AuthorizationController(APIResource):
         user_id = '5d1a1cc632a61a2718cd709a'
 
         """
-        Endpoint responsável por autorizar um cliente
+        authorize or revoke authorization from a customer
         """
         if action.lower() not in ['authorize', 'revoke']:
             raise BadRequest('Action not found. Set "authorize or revoke"!')

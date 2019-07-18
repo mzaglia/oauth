@@ -64,7 +64,7 @@ class ClientsBusiness():
             raise NotFound('User not Found!')
         
         """
-        Verifica se já existe um cliente com o mesmo nome
+        check if client name is already registered
         """
         client = model.find_one({
             "client_name": client_infos['client_name'],
@@ -77,7 +77,7 @@ class ClientsBusiness():
             raise Conflict('A client with this name already exists')
 
         """
-        Cria as credenciais do cliente
+        create client credentials
         """
         client_infos['user_id'] = user['_id']
         client_infos['client_secret'] = random_string(24)
@@ -88,7 +88,7 @@ class ClientsBusiness():
             raise BadRequest('Scope not enabled!')
 
         """ 
-        salva no mongodb
+        save in mongodb
         """
         try:
             model.insert_one(client_infos)
@@ -102,14 +102,14 @@ class ClientsBusiness():
         model = cls.init_infos()['model']
         
         """ 
-        verifica se existe o cliente no banco
+        checks whether the user exists
         """
         client = cls.get_by_id(id)
         if not client:
             raise NotFound('Client not Found!')
 
         """ 
-        atualiza no mongodb 
+        update in mongodb 
         """
         try:
             model.update_one({"_id": ObjectId(id)}, {"$set": client_infos})
@@ -122,14 +122,14 @@ class ClientsBusiness():
         model = cls.init_infos()['model']
         
         """ 
-        verifica se existe o cliente no banco
+        checks whether the user exists
         """
         client = model.find_one({ "_id": ObjectId(id) })
         if not client:
             raise NotFound('Client not Found!')
 
         """ 
-        deleta no mongodb 
+        delete in mongodb 
         """
         try:
             model.delete_one({"_id": ObjectId(id)})
@@ -142,7 +142,7 @@ class ClientsBusiness():
         model = cls.init_infos()['model']
         
         """ 
-        verifica se existe o cliente no banco
+        checks whether the user exists
         """
         client = model.find_one({ "_id": ObjectId(id) })
         if not client:
@@ -156,7 +156,7 @@ class ClientsBusiness():
                 client['expired_at'] = datetime.strptime(date, '%Y-%m-%d') if date else None
 
         """ 
-        atualiza no mongodb 
+        update in mongodb 
         """
         try:
             model.update_one({"_id": ObjectId(id)}, {"$set": client})
@@ -168,15 +168,15 @@ class ClientsBusiness():
     def generate_new_secret(cls, id):
         model = cls.init_infos()['model']
         
-        """ 
-        verifica se existe o cliente no banco
+        """         
+        checks whether the user exists
         """
         client = cls.get_by_id(id)
         if not client:
             raise NotFound('Client not Found!')
 
         """ 
-        atualiza no mongodb 
+        update in mongodb 
         """
         try:
             new_secret = random_string(24)

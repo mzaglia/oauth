@@ -36,7 +36,7 @@ class UsersBusiness():
         model = cls.init_infos()['model']
         
         """ 
-        verifica se já existe um usuário com o mesmo e-mail cadastrado
+        check if email is already registered
         """
         user_exits = model.find_one({"email": infos_user["email"], "deleted_at": None})
         if user_exits:
@@ -46,7 +46,7 @@ class UsersBusiness():
         infos_user['deleted_at'] = None
 
         """ 
-        adiciona as credenciais no objeto user
+        add user crendentials
         """
         credentials = {
             "username": deepcopy(infos_user['email']),
@@ -57,7 +57,7 @@ class UsersBusiness():
         infos_user['clients_authorized'] = []
 
         """ 
-        salva no mongodb
+        save in mongodb
         """
         try:
             model.insert_one(infos_user)
@@ -71,14 +71,14 @@ class UsersBusiness():
         model = cls.init_infos()['model']
         
         """ 
-        verifica se existe o usuário no banco
+        checks whether the user exists
         """
         user = cls.get_by_id(id)
         if not user:
             raise NotFound('User not Found!')
 
         """ 
-        salva no mongodb 
+        save in mongodb 
         """
         try:
             model.update_one({"_id": ObjectId(id)}, {"$set": infos_user})
