@@ -8,7 +8,7 @@ from cerberus import Validator
 def to_date(s):
     return datetime.strptime(s, '%Y-%m-%d') if s else None
 
-def valide_scope(list_scope):
+def validate_scope(list_scope):
     for scope in list_scope:
         if scope not in ['read']:
             return None
@@ -28,7 +28,7 @@ def date_expiration():
 
 def client_create():
     return dict(client_base(), **date_expiration(), **{
-        'scope': {"type": "list", "coerce": valide_scope, "empty": False, "required": True}
+        'scope': {"type": "list", "coerce": validate_scope, "empty": False, "required": True}
     })
     
 
