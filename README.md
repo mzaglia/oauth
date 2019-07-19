@@ -29,7 +29,7 @@ python3 setup.py install
 
 ## Running
 
-- set environment variable: 
+- set environment variable:
     - PORT = port to running API (default: 5000)
     - ENVIRONMENT = env ([DevelopmentConfig, ProductionConfig, TestingConfig])
     - KEYSYSTEM = key to hash system crypto
@@ -41,13 +41,48 @@ python3 setup.py install
     - REDIS_HOST = host redis
     - REDIS_PORT = port redis
     - REDIS_PASSWORD = password redis
-    - KEYJWT = key to jwt crypto 
+    - KEYJWT = key to jwt crypto
 ```
 python3 manager.py run
 ```
 
 ### Running with docker
+You can configure the environment to run through Docker containers. In order to do that, build the image brazildatacube/oauth:0.1:
 ```
-docker-compose build
-docker-compose up -d
+docker build --tag brazildatacube/oauth:0.1 -f docker/Dockerfile .
+```
+
+After that, you can run the application with command:
+
+```
+docker run --interactive \
+           --tty \
+           --detach \
+           --name oauth_app \
+           --publish 5000:5000 \
+           brazildatacube/oauth:0.1
+```
+
+or with compose:
+```
+TAG=0.1 docker-compose up -d
+```
+
+You can also generate the documentation on http://localhost:5001:
+```
+docker run --rm \
+           --interactive \
+           --name oauth_app_docs \
+           --publish 5001:5001 \
+           brazildatacube/oauth:0.1 \
+           python3 manage.py docs --serve
+```
+
+And run the tests:
+```
+docker run --rm \
+           --interactive \
+           --name oauth_app_test \
+           brazildatacube/oauth:0.1 \
+           python3 manage.py test
 ```
