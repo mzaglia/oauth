@@ -9,7 +9,7 @@ from bdc_oauth.utils.base_mongo import mongo
 class UsersBusiness():
 
     @classmethod
-    def init_infos(cls): 
+    def init_infos(cls):
         return {
             "model": mongo.db.users
         }
@@ -29,13 +29,13 @@ class UsersBusiness():
             user = model.find_one({"_id": ObjectId(id), "deleted_at": None}, {"credential.password": return_password})
             return user
         except Exception:
-            raise NotFound("Client not Found!")
+            raise NotFound("User not Found!")
 
     @classmethod
     def create(cls, infos_user):
         model = cls.init_infos()['model']
-        
-        """ 
+
+        """
         check if email is already registered
         """
         user_exits = model.find_one({"email": infos_user["email"], "deleted_at": None})
@@ -45,7 +45,7 @@ class UsersBusiness():
         infos_user['created_at'] = datetime.now()
         infos_user['deleted_at'] = None
 
-        """ 
+        """
         add user crendentials
         """
         credentials = {
@@ -56,35 +56,35 @@ class UsersBusiness():
         infos_user['credential'] = credentials
         infos_user['clients_authorized'] = []
 
-        """ 
+        """
         save in mongodb
         """
         try:
             model.insert_one(infos_user)
             return infos_user
-            
+
         except Exception:
             return False
 
     @classmethod
     def update(cls, id, infos_user):
         model = cls.init_infos()['model']
-        
-        """ 
+
+        """
         checks whether the user exists
         """
         user = cls.get_by_id(id)
         if not user:
             raise NotFound('User not Found!')
 
-        """ 
-        save in mongodb 
+        """
+        save in mongodb
         """
         try:
             model.update_one({"_id": ObjectId(id)}, {"$set": infos_user})
             return True
         except Exception:
-            return False      
+            return False
 
 
     @classmethod
@@ -95,13 +95,13 @@ class UsersBusiness():
         if not user:
             raise NotFound('User not Found!')
 
-        user['deleted_at'] = datetime.now()  
+        user['deleted_at'] = datetime.now()
         try:
             model.update_one({"_id": ObjectId(id)}, {"$set": user})
             return True
-        except Exception as e:
+        except Exception:
             raise InternalServerError("Deleting user error!")
-    
+
 
     @classmethod
     def change_password(cls, id, password, new_password):
@@ -125,11 +125,11 @@ class UsersBusiness():
     def list_clients_authorized(cls, id):
         model = cls.init_infos()['model']
 
-        clients = model.aggregate([ 
+        clients = model.aggregate([
             {
                 "$unwind": "$clients_authorized"
             },
-            { 
+            {
                 "$lookup": {
                     "from": "clients",
                     "localField": "clients_authorized",
@@ -139,14 +139,14 @@ class UsersBusiness():
             },
             {
                 "$match": {
-                    "_id": ObjectId(id), 
+                    "_id": ObjectId(id),
                     "deleted_at": None,
                     "$or": [
                         { "clients.expired_at": None },
                         { "clients.expired_at": { "$gt": datetime.now() } }
                     ]
                 }
-            }, 
+            },
             {
                 "$project": {
                     "_id": 0,

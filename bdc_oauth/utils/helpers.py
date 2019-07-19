@@ -8,8 +8,8 @@ def open_brower(url, time=1):
     @params {string} url to open in brower
     @params {string} time delay to open brower
     """
-    threading.Timer(time, lambda: webbrowser.open(url) ).start()
-    
+    threading.Timer(time, lambda: webbrowser.open(url)).start()
+
 
 def random_string(size=16):
     """

@@ -6,13 +6,14 @@ from bdc_core.utils.flask import APIResource
 
 from bdc_oauth.auth import ns
 from bdc_oauth.auth.business import AuthBusiness
+from bdc_oauth.auth.decorators import jwt_required
 from bdc_oauth.auth.parsers import validate
 
 api = ns
 
-@api.route('/login')
+@api.route('/token')
 class AuthController(APIResource):
-    
+
     def post(self):
         """
         Logging in to the system
@@ -29,10 +30,10 @@ class AuthController(APIResource):
 
 @api.route('/<action>/<client_id>')
 class AuthorizationController(APIResource):
-    
+
+    @jwt_required
     def post(self, action, client_id):
-        # TODO: get to token
-        user_id = '5d1a1cc632a61a2718cd709a'
+        user_id = request.id
 
         """
         authorize or revoke authorization from a customer
