@@ -2,7 +2,7 @@ version: '3'
 
 services:
   # bdc-oauth:
-  #   build: ./
+  #   image: brazildatacube/oauth:${TAG}
   #   container_name: bdc-oauth
   #   environment:
   #     - PORT=5000
@@ -26,7 +26,7 @@ services:
   mongo-oauth:
     image: mongo
     container_name: mongo-oauth
-    ports: 
+    ports:
       - "27018:27017"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=bdc

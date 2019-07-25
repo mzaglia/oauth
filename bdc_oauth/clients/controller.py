@@ -5,29 +5,29 @@ from flask_restplus import marshal
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 from bdc_core.utils.flask import APIResource
 
+from bdc_oauth.auth.decorators import jwt_required, jwt_admin_required, jwt_author_required, jwt_admin_author_required
 from bdc_oauth.clients import ns
 from bdc_oauth.clients.business import ClientsBusiness
 from bdc_oauth.clients.parsers import validate
 from bdc_oauth.clients.serializers import get_client_serializer, get_clients_serializer
-# from bdc_oauth.utils.decorators import jwt_required
 
 api = ns
+
 
 @api.route('/')
 class ClientsController(APIResource):
 
-    # @jwt_required
+    @jwt_required
     def get(self):
         """
         list clients that are not expired
         """
         clients = ClientsBusiness.get_all()
         return marshal({"clients": clients}, get_clients_serializer())
-    
-    # @jwt_required
+
+    @jwt_admin_required
     def post(self):
-        # TODO: get to token
-        user_id = '5d1a1cc632a61a2718cd709a'
+        user_id = request.id
 
         """
         create new client
@@ -43,22 +43,21 @@ class ClientsController(APIResource):
         return marshal(client, get_client_serializer())
 
 
-
 @api.route('/<id>')
 class ClientController(APIResource):
 
-    # @jwt_required
-    def get(self, id): 
+    @jwt_required
+    def get(self, id):
         """
-        list information from an active customer 
+        list information from an active customer
         """
         client = ClientsBusiness.get_by_id(id)
         if not client:
             raise NotFound("Client not Found!")
-        
+
         return marshal(client, get_client_serializer()), 200
 
-    # @jwt_required
+    @jwt_author_required
     def put(self, id):
         """
         update client
@@ -75,7 +74,7 @@ class ClientController(APIResource):
             "message": "Updated Client!"
         }
 
-    # @jwt_required
+    @jwt_author_required
     def delete(self, id):
         """
         delete client
@@ -83,7 +82,7 @@ class ClientController(APIResource):
         status = ClientsBusiness.delete(id)
         if not status:
             raise NotFound("Client not Found!")
-        
+
         return {
             "message": "Deleted client!"
         }
@@ -92,6 +91,7 @@ class ClientController(APIResource):
 @api.route('/<id>/status/<action>')
 class ClientStatusController(APIResource):
 
+    @jwt_admin_author_required
     def put(self, id, action):
         """
         enable or disable a client
@@ -106,10 +106,11 @@ class ClientStatusController(APIResource):
             if status is False:
                 raise BadRequest(json.dumps(data))
 
-        status = ClientsBusiness.update_date_expiration(id, action, data.get('expired_at', None))
+        status = ClientsBusiness.update_date_expiration(
+            id, action, data.get('expired_at', None))
         if not status:
             raise NotFound("Client not Found!")
-        
+
         return {
             "message": "Updated client!"
         }
@@ -118,10 +119,10 @@ class ClientStatusController(APIResource):
 @api.route('/<user_id>')
 class AdminClientsController(APIResource):
 
-    # @jwt_required
+    @jwt_admin_required
     def get(self, user_id):
         """
-        list clients actived by a user
+        list clients created by a user
         """
         clients = ClientsBusiness.list_by_userid(user_id)
         return marshal({"clients": clients}, get_clients_serializer())
@@ -130,7 +131,7 @@ class AdminClientsController(APIResource):
 @api.route('/<id>/new-secret')
 class ClientCredentialsController(APIResource):
 
-    # @jwt_required
+    @jwt_author_required
     def put(self, id):
         """
         generate new secret

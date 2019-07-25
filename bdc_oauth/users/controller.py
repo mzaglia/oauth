@@ -5,26 +5,26 @@ from flask_restplus import marshal
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 from bdc_core.utils.flask import APIResource
 
+from bdc_oauth.auth.decorators import jwt_admin_required, jwt_admin_me_required, jwt_me_required
 from bdc_oauth.users import ns
 from bdc_oauth.users.business import UsersBusiness
 from bdc_oauth.users.parsers import validate
 from bdc_oauth.users.serializers import get_user_serializer, get_users_serializer
 from bdc_oauth.clients.serializers import get_clients_serializer
-# from bdc_oauth.utils.decorators import jwt_required
 
 api = ns
 
 @api.route('/')
 class UsersController(APIResource):
 
-    # @jwt_required
+    @jwt_admin_required
     def get(self):
         """
         user list
         """
         users = UsersBusiness.get_all()
         return marshal({"users": users}, get_users_serializer())
-    
+
     def post(self):
         """
         create new user
@@ -43,18 +43,18 @@ class UsersController(APIResource):
 @api.route('/<id>')
 class UserController(APIResource):
 
-    # @jwt_required
-    def get(self, id): 
+    @jwt_admin_me_required
+    def get(self, id):
         """
         user informations by id
         """
         user = UsersBusiness.get_by_id(id)
         if not user:
             raise NotFound("User not Found!")
-        
+
         return marshal(user, get_user_serializer())
 
-    # @jwt_required
+    @jwt_admin_me_required
     def put(self, id):
         """
         update a user's information
@@ -71,7 +71,7 @@ class UserController(APIResource):
             "message": "User updated!"
         }
 
-    # @jwt_required
+    @jwt_me_required
     def delete(self, id):
         """
         apply soft_delete in user (disable)
@@ -79,16 +79,16 @@ class UserController(APIResource):
         status = UsersBusiness.delete(id)
         if not status:
             NotFound("User not Found!")
-        
+
         return {
             "message": "Deleted user!"
         }
-        
+
 
 @api.route('/change-password/<id>')
 class UserPassController(APIResource):
 
-    # @jwt_required
+    @jwt_me_required
     def put(self, id):
         """
         change user password
@@ -109,13 +109,12 @@ class UserPassController(APIResource):
 @api.route('/<id>/clients')
 class UserClientsController(APIResource):
 
-    # @jwt_required
+    @jwt_admin_me_required
     def get(self, id):
         """
-        list all authorized clients of a particular user
+        list all authorized clients of a specific user
         """
         clients = UsersBusiness.list_clients_authorized(id)
         clients = clients[0]['clients'] if len(clients) else []
 
         return marshal({"clients": clients}, get_clients_serializer())
-
