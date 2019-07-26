@@ -11,7 +11,7 @@ from bdc_oauth.auth.parsers import validate
 
 api = ns
 
-@api.route('/token')
+@api.route('/login')
 class AuthController(APIResource):
 
     def post(self):
@@ -27,6 +27,21 @@ class AuthController(APIResource):
             raise InternalServerError('Error logging!')
 
         return auth
+
+@api.route('/token')
+class AuthClientController(APIResource):
+
+    @jwt_required
+    def post(self):
+        """
+        Generate token to client application
+        """
+        service = request.args['service']
+        scope = request.args['scope']
+
+        auth_client = AuthBusiness.token('', service, scope)
+
+        return auth_client
 
 @api.route('/<action>/<client_id>')
 class AuthorizationController(APIResource):

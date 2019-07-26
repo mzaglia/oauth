@@ -10,9 +10,13 @@ def get_settings(env):
 class Config():
     DEBUG = False
     TESTING = False
-    CSRF_ENABLED = False
-    WTF_CSRF_ENABLED = False
-    SECRET_KEY = os.environ.get('KEYSYSTEM', 'Api-oauth')
+
+    AUTH_SECRET_KEY = os.environ.get('AUTH_SECRET_KEY', 'bdc#2019key')
+    CLIENT_SECRET_KEY = os.environ.get('CLIENT_SECRET_KEY', '')
+    ALGORITHM = os.environ.get('ALGORITHM', 'RS256')
+    EXPIRES_IN_AUTH = int(os.environ.get('EXPIRES_IN_AUTH', '3600'))
+    EXPIRES_IN_CLIENT = int(os.environ.get('EXPIRES_IN_CLIENT', '86400'))
+
     MONGO_URI = 'mongodb://{}:{}@{}:{}/{}?authSource=admin'.format(
         os.environ.get('MONGO_USER'), os.environ.get('MONGO_PASSWORD'), os.environ.get('MONGO_HOST'),
         os.environ.get('MONGO_PORT'), os.environ.get('MONGO_DBNAME'))
