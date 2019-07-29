@@ -44,9 +44,11 @@ def jwt_required(func):
 def jwt_admin_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        _, grants, _ = get_userinfo_by_token()
+        id, grants, _ = get_userinfo_by_token()
         if not 'admin' in grants:
             raise Forbidden('You need to be an administrator!')
+        request.id = id
+        request.grants = grants
         return func(*args, **kwargs)
     return wrapper
 

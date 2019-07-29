@@ -49,12 +49,15 @@ class UsersBusiness():
         add user crendentials
         """
         credentials = {
-            "username": deepcopy(infos_user['email']),
-            "password": generate_password_hash(infos_user['password']),
+            "username": deepcopy(infos_user['email'].split('@')[0].replace('.', '').replace('_', '')),
+            "password": generate_password_hash(deepcopy(infos_user['password'])),
             "grants": ["user"]
         }
         infos_user['credential'] = credentials
         infos_user['clients_authorized'] = []
+
+        del infos_user["password"]
+        del infos_user["confirm_password"]
 
         """
         save in mongodb

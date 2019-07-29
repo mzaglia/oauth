@@ -18,7 +18,9 @@ tags:
     description: "Users manager"
   - name: "clients"
     description: "Clients manager"
-    
+  - name: "auth"
+    description: "Authentication"
+
 paths:
   /oauth/status:
     get:
@@ -37,7 +39,7 @@ paths:
                     type: string
                   success:
                     type: boolean
-  
+
   /oauth/users/:
     get:
       tags:
@@ -54,7 +56,7 @@ paths:
                 properties:
                   users:
                     type: array
-                    items: 
+                    items:
                       $ref: "#/response/schemas/User"
     post:
       tags:
@@ -75,7 +77,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/response/schemas/User"
-  
+
   /oauth/users/{id}:
     get:
       tags:
@@ -176,7 +178,7 @@ paths:
                     type: boolean
                   message:
                     type: string
-    
+
   /oauth/users/{id}/clients:
     get:
       tags:
@@ -198,9 +200,9 @@ paths:
                   properties:
                     clients:
                       type: array
-                      items: 
+                      items:
                         $ref: "#/response/schemas/Client"
-  
+
   /oauth/clients/:
     get:
       tags:
@@ -217,7 +219,7 @@ paths:
                 properties:
                   users:
                     type: array
-                    items: 
+                    items:
                       $ref: "#/response/schemas/Client"
     post:
       tags:
@@ -238,7 +240,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/response/schemas/Client"
-  
+
   /oauth/clients/{id}:
     get:
       tags:
@@ -366,7 +368,7 @@ paths:
                     type: boolean
                   message:
                     type: string
-    
+
   /oauth/clients/{user_id}:
     get:
       tags:
@@ -388,7 +390,7 @@ paths:
                   properties:
                     clients:
                       type: array
-                      items: 
+                      items:
                         $ref: "#/response/schemas/Client"
 
   /oauth/clients/{id}/new-secret:
@@ -415,23 +417,151 @@ paths:
                   new_secret:
                     type: string
 
+  /oauth/auth/login:
+    post:
+      tags:
+        - "auth"
+      summary: "Login"
+      description: "Authentication and generate token of user"
+      requestBody:
+        description: "crendetials of user"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: "User Token"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                  access_token:
+                    type: string
+
+  /oauth/auth/token:
+    get:
+      tags:
+        - "auth"
+      summary: "Token"
+      description: "Authentication and generate token of client"
+      parameters:
+        - in: query
+          name: service
+          type: string
+          description: "client/app name or service name"
+        - in: query
+          name: scope
+          type: string
+      responses:
+        200:
+          description: "Client Token"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  access_token:
+                    type: string
+
+  /oauth/auth/authorize/{user_id}/{client_id}:
+    post:
+      tags:
+        - "auth"
+      summary: "Authorize client"
+      description: "authorize a client application for a user"
+      parameters:
+        - in: "path"
+          name: "user_id"
+          required: true
+          description: "User ID"
+        - in: "path"
+          name: "client_id"
+          required: true
+          description: "Client ID"
+      requestBody:
+        description: "scopes"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scope:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        200:
+          description: "execution status"
+          content:
+            application/json:
+              schema:
+                type: string
+
+  /oauth/auth/revoke/{user_id}/{client_id}:
+    post:
+      tags:
+        - "auth"
+      summary: "Revoke client"
+      description: "revoke a client application for a user"
+      parameters:
+        - in: "path"
+          name: "user_id"
+          required: true
+          description: "User ID"
+        - in: "path"
+          name: "client_id"
+          required: true
+          description: "Client ID"
+      requestBody:
+        description: "scopes"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scope:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        200:
+          description: "execution status"
+          content:
+            application/json:
+              schema:
+                type: string
+
 request:
   schemas:
     UserFull:
       type: object
       properties:
         name:
-          type: string 
+          type: string
           required: true
         email:
-          type: integer 
+          type: integer
           required: true
         institution:
-          type: string 
+          type: string
         occupation:
-          type: string 
+          type: string
         password:
-          type: string 
+          type: string
           required: true
         confirm_password:
           type: string
@@ -440,20 +570,20 @@ request:
       type: object
       properties:
         name:
-          type: string 
+          type: string
           required: true
         email:
-          type: integer 
+          type: integer
           required: true
         institution:
-          type: string 
+          type: string
         occupation:
           type: string
     UserPassword:
       type: object
       properties:
         password:
-          type: string 
+          type: string
           required: true
         confirm_password:
           type: string
@@ -462,29 +592,24 @@ request:
       type: object
       properties:
         client_name:
-          type: string 
+          type: string
           required: true
         client_uri:
-          type: string 
+          type: string
           required: true
         redirect_uri:
           type: string
           required: true
-        scope:
-          type: array
-          required: true
-          items:
-            type: string
         expired_at:
           type: datetime
     Client:
       type: object
       properties:
         client_name:
-          type: string 
+          type: string
           required: true
         client_uri:
-          type: string 
+          type: string
           required: true
         redirect_uri:
           type: string
@@ -496,21 +621,28 @@ response:
       type: object
       properties:
         _id:
-          type: string 
+          type: string
         name:
-          type: string 
+          type: string
         email:
-          type: integer 
+          type: integer
         institution:
-          type: string 
+          type: string
         occupation:
-          type: string 
+          type: string
         created_at:
           type: datetime
         clients_authorized:
           type: array
           items:
-            type: string
+            type: object
+            properties:
+              id:
+                type: string
+              scope:
+                type: array
+                items:
+                  type: string
         credentials:
           type: object
           properties:
@@ -524,23 +656,18 @@ response:
       type: object
       properties:
         _id:
-          type: string 
+          type: string
         user_id:
-          type: string 
+          type: string
         client_name:
-          type: string 
+          type: string
         client_secret:
-          type: string 
+          type: string
         client_uri:
-          type: string 
+          type: string
         redirect_uri:
           type: string
-        scope:
-          type: array
-          items:
-            type: string
         created_at:
           type: datetime
         expired_at:
           type: datetime
-    
