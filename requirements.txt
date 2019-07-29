@@ -20,3 +20,4 @@ flask_redis==0.4.0
 Sphinx==2.1.2
 git+https://github.com/brazil-data-cube/bdc-core@master
 git+https://github.com/brazil-data-cube/bdc-readthedocs-theme@master
+cryptography==2.7
