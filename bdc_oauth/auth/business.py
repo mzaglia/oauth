@@ -1,14 +1,14 @@
 import jwt
 import time
-from flask import jsonify
 from copy import deepcopy
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.exceptions import BadRequest, NotFound
+from werkzeug.exceptions import BadRequest, NotFound, Forbidden
 
 from bdc_oauth.config import Config
 from bdc_oauth.users.business import UsersBusiness
+from bdc_oauth.clients.business import ClientsBusiness
 from bdc_oauth.utils.base_mongo import mongo
 from bdc_oauth.utils.helpers import kid_from_crypto_key
 
@@ -87,27 +87,55 @@ class AuthBusiness():
         return result
 
     @classmethod
-    def token(cls, user_id, service, scope):
-        # TODO: get_id client by service name
+    def token(cls, user_id, service, scope=''):
+        client_infos = ClientsBusiness.get_by_name(service)
+        user = UsersBusiness.get_by_id(user_id)
 
-        # TODO: verify if user esta autorizado essa aplicação
+        client = list(filter(lambda c: c['id'] == str(client_infos['_id']), user['clients_authorized']))
+        if len(client) <= 0:
+            raise Forbidden('Not authorized!')
 
-        # TODO: verify if scope esta autorizado
+        authorized = False if scope else True
+        typ = ''
+        name = ''
+        actions = []
 
-        params = scope.split(':')
-        if len(params) != 3:
-            return BadRequest('invalid scope')
+        ''' filter and valid scope '''
+        if scope:
+            params = scope.split(':')
+            if len(params) != 3:
+                return BadRequest('Invalid scope!')
 
-        typ = params[0]
-        name = params[1]
-        actions = params[2].split(',')
+            typ = params[0]
+            name = params[1]
+            actions = params[2].split(',')
 
+            for user_scope in client[0]['scope']:
+                if not user_scope:
+                    raise Forbidden('Not authorized!')
+                typ_scope, name_scope, actions_scope = user_scope.split(':')
+
+                if typ_scope == typ:
+                    if name_scope == name or name_scope == '*':
+                        has_actions = True
+                        for action in actions:
+                            if action not in actions_scope.split(',') and '*' not in actions_scope:
+                                has_actions = False
+                        if has_actions:
+                            authorized = True
+                            break
+            if not authorized:
+                raise Forbidden('Not authorized!')
+
+        ''' generate client token '''
         token_client = cls.encode_client_token(service, typ, name, actions)
-
-        return jsonify(token_client)
+        return {
+            "token": token_client.decode('utf8'),
+            "access_token": token_client.decode('utf8')
+        }
 
     @classmethod
-    def authorize_revoke_client(cls, action, user_id, client_id):
+    def authorize_revoke_client(cls, action, user_id, client_id, scope=[]):
         model = UsersBusiness.init_infos()['model']
 
         user = UsersBusiness.get_by_id(user_id)
@@ -117,16 +145,23 @@ class AuthBusiness():
         new_list = []
         if action == 'authorize':
             ''' Authorize client '''
-            if client_id in user['clients_authorized']:
-                return True
-            user['clients_authorized'].append(client_id)
+            has_client = False
+            for client in user['clients_authorized']:
+                if client['id'] == str(client_id):
+                    client['scope'] = client['scope'] + scope
+                    has_client = True
+                    break
+
+            if not has_client:
+                user['clients_authorized'].append({
+                    "id": ObjectId(client_id),
+                    "scope": scope
+                })
             new_list = user['clients_authorized']
 
         else:
             ''' Revoke client '''
-            if client_id not in user['clients_authorized']:
-                return True
-            new_list = filter(lambda x: x != client_id, user['clients_authorized'])
+            new_list = filter(lambda x: str(x["id"]) != client_id, user['clients_authorized'])
 
         try:
             model.update_one({"_id": ObjectId(user_id)}, {"$set": {"clients_authorized": list(new_list)}})

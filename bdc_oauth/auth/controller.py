@@ -6,7 +6,7 @@ from bdc_core.utils.flask import APIResource
 
 from bdc_oauth.auth import ns
 from bdc_oauth.auth.business import AuthBusiness
-from bdc_oauth.auth.decorators import jwt_required
+from bdc_oauth.auth.decorators import jwt_required, jwt_admin_required
 from bdc_oauth.auth.parsers import validate
 
 api = ns
@@ -31,32 +31,34 @@ class AuthController(APIResource):
 @api.route('/token')
 class AuthClientController(APIResource):
 
-    @jwt_required
-    def post(self):
+    def get(self):
         """
         Generate token to client application
         """
         service = request.args['service']
-        scope = request.args['scope']
+        scope = request.args.get('scope')
 
-        auth_client = AuthBusiness.token('', service, scope)
+        username = request.authorization.get('username')
+        password = request.authorization.get('password')
+        user = AuthBusiness.login(username, password)
 
+        auth_client = AuthBusiness.token(user['user_id'], service, scope)
         return auth_client
 
-@api.route('/<action>/<client_id>')
+@api.route('/<action>/<user_id>/<client_id>')
 class AuthorizationController(APIResource):
 
-    @jwt_required
-    def post(self, action, client_id):
-        user_id = request.id
-
+    @jwt_admin_required
+    def post(self, action, user_id, client_id):
         """
         authorize or revoke authorization from a customer
         """
         if action.lower() not in ['authorize', 'revoke']:
             raise BadRequest('Action not found. Set "authorize or revoke"!')
+        if not request.json or len(request.json.get('scope', [])) <= 0:
+            raise BadRequest('Scope is missing!')
 
-        status = AuthBusiness.authorize_revoke_client(action, user_id, client_id)
+        status = AuthBusiness.authorize_revoke_client(action, user_id, client_id, request.json['scope'])
         if not status:
             raise InternalServerError('Error while {}'.format(action))
 

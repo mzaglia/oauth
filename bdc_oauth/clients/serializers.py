@@ -12,7 +12,6 @@ def get_client_serializer():
         "client_secret": fields.String(),
         "client_uri": fields.String(),
         "redirect_uri": fields.String(),
-        "scope": fields.List(fields.String()),
         "created_at": fields.DateTime(),
         "expired_at": fields.DateTime(),
     }

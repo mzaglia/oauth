@@ -1,27 +1,31 @@
 version: '3'
 
 services:
-  # bdc-oauth:
-  #   image: brazildatacube/oauth:${TAG}
-  #   container_name: bdc-oauth
-  #   environment:
-  #     - PORT=5000
-  #     - MONGO_USER=bdc
-  #     - MONGO_PASSWORD=bdc#key#2019
-  #     - MONGO_HOST=mongo-oauth
-  #     - MONGO_PORT=27017
-  #     - MONGO_DBNAME=bdc_client
-  #     - REDIS_HOST=redis-oauth
-  #     - REDIS_PORT=6379
-  #     - REDIS_PASSWORD=passRedis
-  #     - ENVIRONMENT=DevelopmentConfig
-  #     - KEYSYSTEM=Key#2019@BDC#hash
-  #     - KEYJWT=key#jwt#2019
-  #   ports:
-  #     - "5015:5000"
-  #   restart: always
-  #   networks:
-  #     - bdc-application
+  bdc-oauth:
+    build: ./
+    container_name: bdc-oauth
+    environment:
+      - PORT=5000
+      - MONGO_USER=bdc
+      - MONGO_PASSWORD=bdc#key#2019
+      - MONGO_HOST=mongo-oauth
+      - MONGO_PORT=27017
+      - MONGO_DBNAME=bdc_client
+      - REDIS_HOST=redis-oauth
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=passRedis
+      - ENVIRONMENT=DevelopmentConfig
+      - KEYSYSTEM=Key#2019@BDC#hash
+      - AUTH_SECRET_KEY=key#jwt#2019
+      - CLIENT_SECRET_KEY=/home/inpe-datacube/Documents/projects/datacube/apps/oauth/certs/server.key
+      - ALGORITHM=RS256
+      - EXPIRES_IN_AUTH=86400
+      - EXPIRES_IN_CLIENT=604800
+    ports:
+      - "5015:5000"
+    restart: always
+    networks:
+      - bdc-application
 
   mongo-oauth:
     image: mongo

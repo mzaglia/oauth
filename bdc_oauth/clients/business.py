@@ -9,14 +9,14 @@ from bdc_oauth.utils.base_mongo import mongo
 class ClientsBusiness():
 
     @classmethod
-    def init_infos(cls): 
+    def init_infos(cls):
         return {
             "model": mongo.db.clients
         }
 
     @classmethod
     def get_all(cls):
-        model = cls.init_infos()['model']        
+        model = cls.init_infos()['model']
 
         clients = model.find({
             "$or": [
@@ -32,7 +32,23 @@ class ClientsBusiness():
 
         try:
             client = model.find_one({
-                "_id": ObjectId(id), 
+                "_id": ObjectId(id),
+                "$or": [
+                    { "expired_at": {"$gt": datetime.now()} },
+                    { "expired_at": None }
+                ]
+            })
+            return client
+        except Exception:
+            raise NotFound("Client not Found!")
+
+    @classmethod
+    def get_by_name(cls, name):
+        model = cls.init_infos()['model']
+
+        try:
+            client = model.find_one({
+                "client_name": name,
                 "$or": [
                     { "expired_at": {"$gt": datetime.now()} },
                     { "expired_at": None }
@@ -62,7 +78,7 @@ class ClientsBusiness():
         user = UsersBusiness.get_by_id(user_id)
         if not user:
             raise NotFound('User not Found!')
-        
+
         """
         check if client name is already registered
         """
@@ -84,49 +100,49 @@ class ClientsBusiness():
         client_infos['created_at'] = datetime.now()
         client_infos['expired_at'] = client_infos.get('expired_at', None)
 
-        """ 
+        """
         save in mongodb
         """
         try:
             model.insert_one(client_infos)
             return client_infos
-            
+
         except Exception:
-            return False  
+            return False
 
     @classmethod
     def update(cls, id, client_infos):
         model = cls.init_infos()['model']
-        
-        """ 
+
+        """
         checks whether the user exists
         """
         client = cls.get_by_id(id)
         if not client:
             raise NotFound('Client not Found!')
 
-        """ 
-        update in mongodb 
+        """
+        update in mongodb
         """
         try:
             model.update_one({"_id": ObjectId(id)}, {"$set": client_infos})
             return True
         except Exception:
-            return False 
+            return False
 
     @classmethod
     def delete(cls, id):
         model = cls.init_infos()['model']
-        
-        """ 
+
+        """
         checks whether the user exists
         """
         client = model.find_one({ "_id": ObjectId(id) })
         if not client:
             raise NotFound('Client not Found!')
 
-        """ 
-        delete in mongodb 
+        """
+        delete in mongodb
         """
         try:
             model.delete_one({"_id": ObjectId(id)})
@@ -137,49 +153,48 @@ class ClientsBusiness():
     @classmethod
     def update_date_expiration(cls, id, action, date):
         model = cls.init_infos()['model']
-        
-        """ 
+
+        """
         checks whether the user exists
         """
         client = model.find_one({ "_id": ObjectId(id) })
         if not client:
             raise NotFound('Client not Found!')
-        
-        client['expired_at'] = datetime.now() 
+
+        client['expired_at'] = datetime.now()
         if action == 'enable':
             if date and datetime.strptime(date, '%Y-%m-%d') <= datetime.now():
                 raise BadRequest('Expiration date must be greater than today date')
             else:
                 client['expired_at'] = datetime.strptime(date, '%Y-%m-%d') if date else None
 
-        """ 
-        update in mongodb 
+        """
+        update in mongodb
         """
         try:
             model.update_one({"_id": ObjectId(id)}, {"$set": client})
             return True
         except Exception:
-            return False 
+            return False
 
     @classmethod
     def generate_new_secret(cls, id):
         model = cls.init_infos()['model']
-        
-        """         
+
+        """
         checks whether the user exists
         """
         client = cls.get_by_id(id)
         if not client:
             raise NotFound('Client not Found!')
 
-        """ 
-        update in mongodb 
+        """
+        update in mongodb
         """
         try:
             new_secret = random_string(24)
-            client['client_secret'] = new_secret 
+            client['client_secret'] = new_secret
             model.update_one({"_id": ObjectId(id)}, {"$set": client})
             return new_secret
         except Exception:
-            return False 
-    
+            return False

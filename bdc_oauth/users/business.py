@@ -49,7 +49,7 @@ class UsersBusiness():
         add user crendentials
         """
         credentials = {
-            "username": deepcopy(infos_user['email']),
+            "username": deepcopy(infos_user['email'].split('@')[0].replace('.', '').replace('_', '')),
             "password": generate_password_hash(infos_user['password']),
             "grants": ["user"]
         }
