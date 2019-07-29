@@ -91,7 +91,7 @@ class AuthBusiness():
         client_infos = ClientsBusiness.get_by_name(service)
         user = UsersBusiness.get_by_id(user_id)
 
-        client = list(filter(lambda c: c['id'] == str(client_infos['_id']), user['clients_authorized']))
+        client = list(filter(lambda c: c['id'] == client_infos['_id'], user['clients_authorized']))
         if len(client) <= 0:
             raise Forbidden('Not authorized!')
 
