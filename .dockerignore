@@ -3,7 +3,8 @@
 .vscode
 
 README.md
-spec
+/spec
+/docs
 
 /docker
 
@@ -26,7 +27,3 @@ wheels/
 *.egg
 MANIFEST
 
-# local test
-files/
-/bdc_geoserver/coverages/properties_files/indexer.properties
-/bdc_geoserver/coverages/properties_files/datastore.properties
