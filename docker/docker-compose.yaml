@@ -2,7 +2,10 @@ version: '3'
 
 services:
   bdc-oauth:
-    image: brazildatacube/oauth:0.0.2
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    image: brazildatacube/oauth:${BDC_OAUTH_VERSION}
     container_name: bdc-oauth
     environment:
       - PORT=5000
