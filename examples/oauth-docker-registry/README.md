@@ -1,6 +1,6 @@
 ### OAuth with Docker Registry
 
-Make sure you have generated certificate `.crt` and `.key` files and put them inside `certs` folder. You can follow this step [`Configuring`](../../#configuring). Make sure the `oauth` server is running. You can check in the section [`Running`](../../#running) for further details.
+Make sure you have generated certificate `.crt` and `.key` files and put them inside `certs` folder. You can follow this step [`Configuring`](../../README.md#configuring). Make sure the `oauth` server is running. You can check in the section [`Running`](../../README.md#running) for further details.
 
 The `docker-compose.yml` below defines a simple abstraction of how to start docker registry with SSL and OAuth Server. Make sure to edit the variable `REGISTRY_AUTH_TOKEN_REALM` to the IP of OAuth Server.
 
