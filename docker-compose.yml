@@ -20,10 +20,12 @@ services:
       - ENVIRONMENT=DevelopmentConfig
       - KEYSYSTEM=Key#2019@BDC#hash
       - AUTH_SECRET_KEY=key#jwt#2019
-      - CLIENT_SECRET_KEY=/bdc-oauth/certs/server.key
+      - CLIENT_SECRET_KEY=/certs/server.key
       - ALGORITHM=RS256
       - EXPIRES_IN_AUTH=86400
       - EXPIRES_IN_CLIENT=604800
+    volumes:
+      - "./certs:/certs"
     ports:
       - "5015:5000"
     restart: always
