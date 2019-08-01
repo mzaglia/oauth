@@ -1,6 +1,6 @@
 ### OAuth with Docker Registry
 
-Make sure you have generated certificate `.crt` and `.key` files and put them inside `certs` folder. You can follow this step [`Configuring`](#configuring). Make sure the `oauth` server is running. You can check in the section [`Running`](#running) for further details.
+Make sure you have generated certificate `.crt` and `.key` files and put them inside `certs` folder. You can follow this step [`Configuring`](/#configuring). Make sure the `oauth` server is running. You can check in the section [`Running`](/#running) for further details.
 
 The `docker-compose.yml` below defines a simple abstraction of how to start docker registry with SSL and OAuth Server. Make sure to edit the variable `REGISTRY_AUTH_TOKEN_REALM` to the IP of OAuth Server.
 
@@ -28,6 +28,8 @@ After that, start registry on port 5000:
 ```bash
 docker-compose up -d
 ```
+
+Now we need to create users to access docker registry.
 
 ## Users
 
@@ -69,6 +71,7 @@ Take the `access_token` and follow to the next step to create OAuth Client
 
 ### Create Client
 
+```bash
 docker exec -it \
     mongo-oauth \
     mongo --authenticationDatabase admin \
@@ -76,6 +79,7 @@ docker exec -it \
         -u bdc \
         -p bdc#key#2019 \
         --eval 'db.users.update({"email": "admin@admin.com"}, {"$set": {"credential.grants": ["user", "admin"]}})'
+```
 
 ```bash
 curl --header "Content-Type: application/json" \
