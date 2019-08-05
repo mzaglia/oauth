@@ -15,7 +15,6 @@ It will runs on host `0.0.0.0` with port `5000`. You can access directly through
 others available environment variable:
  - PORT = port to running API (default: 5000)
  - ENVIRONMENT = env ([DevelopmentConfig, ProductionConfig, TestingConfig])
- - KEYSYSTEM = key to hash system crypto
  - MONGO_USER = user database
  - MONGO_PASSWORD = password database
  - MONGO_HOST = host database
