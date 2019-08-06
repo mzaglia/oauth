@@ -11,6 +11,8 @@ def to_date(s):
 def client_base():
     return {
         'client_name': {"type": "string", "empty": False, "required": True},
+        'client_secret': {"type": "string", "empty": False, "required": True},
+        'type_secret': {"type": "string", "empty": False, "required": True, "allowed": ["file", "string"]},
         'client_uri': {"type": "string", "empty": False, "required": True},
         'redirect_uri': {"type": "string", "empty": False, "required": True}
     }

@@ -12,7 +12,6 @@ class Config():
     TESTING = False
 
     AUTH_SECRET_KEY = os.environ.get('AUTH_SECRET_KEY', 'bdc#2019key')
-    CLIENT_SECRET_KEY = os.environ.get('CLIENT_SECRET_KEY', '')
     ALGORITHM = os.environ.get('ALGORITHM', 'RS256')
     EXPIRES_IN_AUTH = int(os.environ.get('EXPIRES_IN_AUTH', '3600'))
     EXPIRES_IN_CLIENT = int(os.environ.get('EXPIRES_IN_CLIENT', '86400'))

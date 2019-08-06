@@ -96,7 +96,6 @@ class ClientsBusiness():
         create client credentials
         """
         client_infos['user_id'] = user['_id']
-        client_infos['client_secret'] = random_string(24)
         client_infos['created_at'] = datetime.now()
         client_infos['expired_at'] = client_infos.get('expired_at', None)
 
