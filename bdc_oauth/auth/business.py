@@ -43,12 +43,12 @@ class AuthBusiness():
 
     @staticmethod
     def encode_client_token(service, access_type, access_name, access_actions, user_infos, client_infos):
-        header = {'typ': 'JWT'}
+        header = {
+            'typ': 'JWT'
+        }
         claim = {
             'iss': 'oauth_server',
-            'sub': {
-                'user_id': str(user_infos['_id'])
-            },
+            'sub': '',
             'aud': service,
             'exp': int(time.time()) + int(Config.EXPIRES_IN_CLIENT),
             'nbf': int(time.time()) - 30,
@@ -63,8 +63,11 @@ class AuthBusiness():
         }
 
         if client_infos['type_secret'] == "file":
-            header['alg'] = Config.ALGORITHM,
-            header['kid'] = kid_from_crypto_key(client_infos['client_secret'], 'RSA')
+            header = {
+                'typ': 'JWT',
+                'alg': Config.ALGORITHM,
+                'kid': kid_from_crypto_key(client_infos['client_secret'], 'RSA')
+            }
             return jwt.encode(claim, open(client_infos['client_secret']).read(),
                               algorithm=Config.ALGORITHM,
                               headers=header)
