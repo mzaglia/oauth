@@ -11,6 +11,7 @@ from bdc_oauth.clients.business import ClientsBusiness
 from bdc_oauth.utils.base_mongo import mongo
 from bdc_oauth.utils.helpers import kid_from_crypto_key
 
+
 class AuthBusiness():
 
     @classmethod
@@ -41,11 +42,9 @@ class AuthBusiness():
         )
 
     @staticmethod
-    def encode_client_token(service, access_type, access_name, access_actions):
+    def encode_client_token(service, access_type, access_name, access_actions, user_infos, client_infos):
         header = {
-            'typ': 'JWT',
-            'alg': Config.ALGORITHM,
-            'kid': kid_from_crypto_key(Config.CLIENT_SECRET_KEY, 'RSA')
+            'typ': 'JWT'
         }
         claim = {
             'iss': 'oauth_server',
@@ -62,15 +61,25 @@ class AuthBusiness():
                 }
             ]
         }
-        return jwt.encode(claim, open(Config.CLIENT_SECRET_KEY).read(),
-                    algorithm=Config.ALGORITHM,
-                    headers=header)
+
+        if client_infos['type_secret'] == "file":
+            header = {
+                'typ': 'JWT',
+                'alg': Config.ALGORITHM,
+                'kid': kid_from_crypto_key(client_infos['client_secret'], 'RSA')
+            }
+            return jwt.encode(claim, open(client_infos['client_secret']).read(),
+                              algorithm=Config.ALGORITHM,
+                              headers=header)
+        return jwt.encode(claim, client_infos['client_secret'],
+                          headers=header)
 
     @classmethod
     def login(cls, username, password):
         model = UsersBusiness.init_infos()['model']
 
-        user = model.find_one({"credential.username": username, "deleted_at": None})
+        user = model.find_one(
+            {"credential.username": username, "deleted_at": None})
         if not user:
             raise NotFound('User not found!')
 
@@ -78,7 +87,8 @@ class AuthBusiness():
             raise BadRequest('Incorrect password!')
 
         user_id = str(user['_id'])
-        token = cls.encode_auth_token(user_id, user['credential']['grants'], 'user')
+        token = cls.encode_auth_token(
+            user_id, user['credential']['grants'], 'user')
         result = {
             "user_id": user_id,
             "access_token": token.decode('utf8').replace("'", '"')
@@ -90,7 +100,8 @@ class AuthBusiness():
         client_infos = ClientsBusiness.get_by_name(service)
         user = UsersBusiness.get_by_id(user_id)
 
-        client = list(filter(lambda c: c['id'] == client_infos['_id'], user['clients_authorized']))
+        client = list(
+            filter(lambda c: c['id'] == client_infos['_id'], user['clients_authorized']))
         if len(client) <= 0:
             raise Forbidden('Not authorized!')
 
@@ -127,7 +138,8 @@ class AuthBusiness():
                 raise Forbidden('Not authorized!')
 
         ''' generate client token '''
-        token_client = cls.encode_client_token(service, typ, name, actions)
+        token_client = cls.encode_client_token(
+            service, typ, name, actions, user, client_infos)
         return {
             "token": token_client.decode('utf8'),
             "access_token": token_client.decode('utf8')
@@ -160,10 +172,12 @@ class AuthBusiness():
 
         else:
             ''' Revoke client '''
-            new_list = filter(lambda x: str(x["id"]) != client_id, user['clients_authorized'])
+            new_list = filter(lambda x: str(
+                x["id"]) != client_id, user['clients_authorized'])
 
         try:
-            model.update_one({"_id": ObjectId(user_id)}, {"$set": {"clients_authorized": list(new_list)}})
+            model.update_one({"_id": ObjectId(user_id)}, {
+                             "$set": {"clients_authorized": list(new_list)}})
             return True
         except Exception:
             return False

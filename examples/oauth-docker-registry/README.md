@@ -91,7 +91,9 @@ curl --header "Content-Type: application/json" \
 {
     "client_name": "registry",
     "client_uri": "http://localhost:8080/oauth",
-    "redirect_uri": "http://localhost:8080/oauth"
+    "redirect_uri": "http://localhost:8080/oauth",
+    "client_secret": "/path/cert/",
+    "type_secret": "file"
 }
 EOF
 ```
