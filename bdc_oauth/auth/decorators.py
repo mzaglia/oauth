@@ -57,7 +57,7 @@ def jwt_me_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         id, _, _ = get_userinfo_by_token()
-        if id != 1:
+        if id != kwargs['id']:
             raise Forbidden('The token does not reference the informed user!')
         return func(*args, **kwargs)
     return wrapper
