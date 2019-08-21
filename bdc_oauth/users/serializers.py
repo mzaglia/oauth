@@ -12,7 +12,10 @@ def get_user_serializer(use_password=False):
         "institution": fields.String(),
         "occupation": fields.String(),
         "created_at": fields.DateTime(),
-        "clients_authorized": fields.List(fields.String())
+        "clients_authorized": fields.List(fields.Nested({
+            "id": fields.String(),
+            "scope": fields.String()
+        }))
     }
     if use_password:
         schema["credential"] = fields.Nested({
