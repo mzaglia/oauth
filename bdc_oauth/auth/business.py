@@ -158,7 +158,7 @@ class AuthBusiness():
             ''' Authorize client '''
             has_client = False
             for client in user['clients_authorized']:
-                if client['id'] == str(client_id):
+                if str(client['id']) == str(client_id):
                     client['scope'] = client['scope'] + scope
                     has_client = True
                     break
