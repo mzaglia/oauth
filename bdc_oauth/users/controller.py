@@ -2,10 +2,10 @@ import os
 import json
 from flask import request
 from flask_restplus import marshal
-from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
+from werkzeug.exceptions import InternalServerError, BadRequest, NotFound, Forbidden
 from bdc_core.utils.flask import APIResource
 
-from bdc_oauth.auth.decorators import jwt_admin_required, jwt_admin_me_required, jwt_me_required
+from bdc_oauth.auth.decorators import jwt_admin_required, jwt_admin_me_required, jwt_me_required, get_userinfo_by_token
 from bdc_oauth.users import ns
 from bdc_oauth.users.business import UsersBusiness
 from bdc_oauth.users.parsers import validate
@@ -13,6 +13,7 @@ from bdc_oauth.users.serializers import get_user_serializer, get_users_serialize
 from bdc_oauth.clients.serializers import get_clients_serializer
 
 api = ns
+
 
 @api.route('/')
 class UsersController(APIResource):
@@ -33,7 +34,17 @@ class UsersController(APIResource):
         if status is False:
             raise BadRequest(json.dumps(data))
 
-        user = UsersBusiness.create(data)
+        admin = data.get('admin', False)
+
+        # Only admin users can create.
+        if admin:
+            user_id, grants, _ = get_userinfo_by_token()
+
+            if 'admin' not in grants:
+                raise Forbidden('You need to be an administrator!')
+
+        user = UsersBusiness.create(data, admin=admin)
+
         if not user:
             raise InternalServerError('Error creating user!')
 

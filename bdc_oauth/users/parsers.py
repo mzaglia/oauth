@@ -4,13 +4,16 @@ validation of user controllers schemas
 
 from cerberus import Validator
 
+
 def user_base():
     return {
         'name': {"type": "string", "empty": False, "required": True},
         'email': {"type": "string", "empty": False, "required": True},
         'institution': {"type": "string", "empty": True, "required": False},
-        'occupation': {"type": "string", "empty": True, "required": False}
+        'occupation': {"type": "string", "empty": True, "required": False},
+        'admin': {'type': 'boolean', 'empty': True, 'required': False}
     }
+
 
 def user_password():
     return {
@@ -18,13 +21,16 @@ def user_password():
         'confirm_password': {"type": "string", "empty": False, "required": True}
     }
 
+
 def user_change_password():
     return dict(user_password(), **{
         'old_password': {"type": "string", "empty": False, "required": True},
     })
 
+
 def user_create():
     return dict(user_base(), **user_password())
+
 
 def user_update():
     return user_base()
