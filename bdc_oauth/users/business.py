@@ -32,7 +32,7 @@ class UsersBusiness():
             raise NotFound("User not Found!")
 
     @classmethod
-    def create(cls, infos_user):
+    def create(cls, infos_user, admin=False):
         model = cls.init_infos()['model']
 
         """
@@ -51,8 +51,9 @@ class UsersBusiness():
         credentials = {
             "username": deepcopy(infos_user['email'].split('@')[0].replace('.', '').replace('_', '')),
             "password": generate_password_hash(deepcopy(infos_user['password'])),
-            "grants": ["user"]
+            "grants": ['user' if not admin else 'admin']
         }
+
         infos_user['credential'] = credentials
         infos_user['clients_authorized'] = []
 

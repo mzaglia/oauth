@@ -6,7 +6,7 @@ from bdc_core.utils.flask import APIResource
 
 from bdc_oauth.auth import ns
 from bdc_oauth.auth.business import AuthBusiness
-from bdc_oauth.auth.decorators import jwt_required, jwt_admin_required
+from bdc_oauth.auth.decorators import get_userinfo_by_token, jwt_admin_required
 from bdc_oauth.auth.parsers import validate
 
 api = ns
@@ -38,12 +38,16 @@ class AuthClientController(APIResource):
         service = request.args['service']
         scope = request.args.get('scope')
 
-        username = request.authorization.get('username')
-        password = request.authorization.get('password')
-        user = AuthBusiness.login(username, password)
+        if request.authorization:
+            username = request.authorization.get('username')
+            password = request.authorization.get('password')
+            user_id = AuthBusiness.login(username, password)['user_id']
+        else:
+            user_id, _, _ = get_userinfo_by_token()
 
-        auth_client = AuthBusiness.token(user['user_id'], service, scope)
+        auth_client = AuthBusiness.token(user_id, service, scope)
         return auth_client
+
 
 @api.route('/<action>/<user_id>/<client_id>')
 class AuthorizationController(APIResource):
