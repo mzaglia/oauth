@@ -43,9 +43,6 @@ class AuthBusiness():
 
     @staticmethod
     def encode_client_token(service, access_type, access_name, access_actions, user_infos, client_infos):
-        header = {
-            'typ': 'JWT'
-        }
         claim = {
             'iss': 'oauth_server',
             'sub': '',
@@ -62,7 +59,16 @@ class AuthBusiness():
             ]
         }
 
-        if client_infos['type_secret'] == "file":
+        if client_infos['type_secret'] == "string":
+            header = {
+                'typ': 'JWT',
+                'alg': 'HS512'
+            }
+            return jwt.encode(claim, client_infos['client_secret'],
+                            algorithm='HS512',
+                            headers=header)
+
+        elif client_infos['type_secret'] == "file":
             header = {
                 'typ': 'JWT',
                 'alg': Config.ALGORITHM,
@@ -71,8 +77,7 @@ class AuthBusiness():
             return jwt.encode(claim, open(client_infos['client_secret']).read(),
                               algorithm=Config.ALGORITHM,
                               headers=header)
-        return jwt.encode(claim, client_infos['client_secret'],
-                          headers=header)
+
 
     @classmethod
     def login(cls, username, password):

@@ -5,7 +5,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='bdc_oauth',
-    version='0.1',
+    version='0.0.7',
     description='Brazilian Data Cube OAuth Package',
     author='Admin',
     author_email='admin@admin.com',
