@@ -59,7 +59,7 @@ class AuthBusiness():
             ]
         }
 
-        if client_infos['type_secret'] == "file":
+        if client_infos['type_secret'] == "string":
             header = {
                 'typ': 'JWT',
                 'alg': 'HS512'
@@ -68,7 +68,7 @@ class AuthBusiness():
                             algorithm='HS512',
                             headers=header)
 
-        if client_infos['type_secret'] == "file":
+        elif client_infos['type_secret'] == "file":
             header = {
                 'typ': 'JWT',
                 'alg': Config.ALGORITHM,
