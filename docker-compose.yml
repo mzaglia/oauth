@@ -5,7 +5,6 @@ services:
   #   build:
   #     context: .
   #     dockerfile: ./docker/Dockerfile
-  #   image: brazildatacube/oauth:${BDC_OAUTH_VERSION}
   #   container_name: bdc-oauth
   #   environment:
   #     - PORT=5000
@@ -20,7 +19,6 @@ services:
   #     - ENVIRONMENT=DevelopmentConfig
   #     - KEYSYSTEM=Key#2019@BDC#hash
   #     - AUTH_SECRET_KEY=key#jwt#2019
-  #     - CLIENT_SECRET_KEY=/certs/server.key
   #     - ALGORITHM=RS256
   #     - EXPIRES_IN_AUTH=86400
   #     - EXPIRES_IN_CLIENT=604800
