@@ -68,7 +68,6 @@ We strongly recommend to run `oauth` server with docker containers. You can chec
     - REDIS_PORT = port redis
     - REDIS_PASSWORD = password redis
     - AUTH_SECRET_KEY = key to jwt crypto
-    - CLIENT_SECRET_KEY = path of certificate file key. Example: '/certs/server.key'
     - ALGORITHM = algorithm to jwt crypto
     - EXPIRES_IN_AUTH = time to expirate user token
     - EXPIRES_IN_CLIENT = time to expirate client token
