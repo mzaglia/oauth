@@ -127,19 +127,3 @@ class AdminClientsController(APIResource):
         clients = ClientsBusiness.list_by_userid(user_id)
         return marshal({"clients": clients}, get_clients_serializer())
 
-
-@api.route('/<id>/new-secret')
-class ClientCredentialsController(APIResource):
-
-    @jwt_author_required
-    def put(self, id):
-        """
-        generate new secret
-        """
-        secret = ClientsBusiness.generate_new_secret(id)
-        if not secret:
-            raise InternalServerError('Error generate secret!')
-
-        return {
-            "new_secret": secret
-        }

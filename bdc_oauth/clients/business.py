@@ -140,6 +140,8 @@ class ClientsBusiness():
         if not client:
             raise NotFound('Client not Found!')
 
+        # TODO: remove client of users
+
         """
         delete in mongodb
         """
@@ -173,27 +175,5 @@ class ClientsBusiness():
         try:
             model.update_one({"_id": ObjectId(id)}, {"$set": client})
             return True
-        except Exception:
-            return False
-
-    @classmethod
-    def generate_new_secret(cls, id):
-        model = cls.init_infos()['model']
-
-        """
-        checks whether the user exists
-        """
-        client = cls.get_by_id(id)
-        if not client:
-            raise NotFound('Client not Found!')
-
-        """
-        update in mongodb
-        """
-        try:
-            new_secret = random_string(24)
-            client['client_secret'] = new_secret
-            model.update_one({"_id": ObjectId(id)}, {"$set": client})
-            return new_secret
         except Exception:
             return False

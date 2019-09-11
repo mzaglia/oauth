@@ -9,7 +9,6 @@ def get_client_serializer():
         "_id": fields.String(),
         "user_id": fields.String(),
         "client_name": fields.String(),
-        "client_secret": fields.String(),
         "client_uri": fields.String(),
         "redirect_uri": fields.String(),
         "created_at": fields.DateTime(),
