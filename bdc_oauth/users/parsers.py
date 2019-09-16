@@ -33,7 +33,11 @@ def user_create():
 
 
 def user_update():
-    return user_base()
+    return {
+        'institution': {"type": "string", "empty": True, "required": False},
+        'occupation': {"type": "string", "empty": True, "required": False}
+    }
+
 
 
 def validate(data, type_schema, validate_password=False):
