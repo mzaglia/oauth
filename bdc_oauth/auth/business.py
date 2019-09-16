@@ -96,6 +96,7 @@ class AuthBusiness():
             user_id, user['credential']['grants'], 'user')
         result = {
             "user_id": user_id,
+            "grants": user['credential']['grants'],
             "access_token": token.decode('utf8').replace("'", '"')
         }
         return result
