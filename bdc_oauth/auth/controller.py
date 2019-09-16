@@ -6,7 +6,7 @@ from bdc_core.utils.flask import APIResource
 
 from bdc_oauth.auth import ns
 from bdc_oauth.auth.business import AuthBusiness
-from bdc_oauth.auth.decorators import get_userinfo_by_token, jwt_admin_required
+from bdc_oauth.auth.decorators import get_userinfo_by_token, jwt_admin_required, jwt_author_required
 from bdc_oauth.auth.parsers import validate
 
 api = ns
@@ -52,7 +52,7 @@ class AuthClientController(APIResource):
 @api.route('/<action>/<user_id>/<client_id>')
 class AuthorizationController(APIResource):
 
-    @jwt_admin_required
+    @jwt_author_required
     def post(self, action, user_id, client_id):
         """
         authorize or revoke authorization from a customer

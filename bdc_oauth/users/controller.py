@@ -35,10 +35,9 @@ class UsersController(APIResource):
             raise BadRequest(json.dumps(data))
 
         admin = data.get('admin', False)
-
         # Only admin users can create.
         if admin:
-            user_id, grants, _ = get_userinfo_by_token()
+            _, grants, _ = get_userinfo_by_token()
 
             if 'admin' not in grants:
                 raise Forbidden('You need to be an administrator!')
