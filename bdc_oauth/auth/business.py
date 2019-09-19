@@ -147,6 +147,8 @@ class AuthBusiness():
         token_client = cls.encode_client_token(
             service, typ, name, actions, user, client_infos)
         return {
+            "user_id": user_id,
+            "callback": client_infos['redirect_uri'],
             "token": token_client.decode('utf8'),
             "access_token": token_client.decode('utf8')
         }
