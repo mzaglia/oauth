@@ -56,7 +56,8 @@ class AuthBusiness():
                     'name': access_name,
                     'actions': access_actions
                 }
-            ]
+            ],
+            'user_id': str(user_infos['_id'])
         }
 
         if client_infos['type_secret'] == "string":
@@ -146,6 +147,7 @@ class AuthBusiness():
         ''' generate client token '''
         token_client = cls.encode_client_token(
             service, typ, name, actions, user, client_infos)
+
         return {
             "user_id": user_id,
             "callback": client_infos['redirect_uri'],
