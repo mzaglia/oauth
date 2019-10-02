@@ -76,7 +76,7 @@ def jwt_admin_me_required(func):
 def jwt_author_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        id, _, client = get_userinfo_by_token(client_id=kwargs['id'])
+        id, _, client = get_userinfo_by_token(client_id=kwargs['client_id'])
         if id != str(client['user_id']):
             raise Forbidden('You do not have permission!')
         return func(*args, **kwargs)
