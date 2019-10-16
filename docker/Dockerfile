@@ -1,13 +1,9 @@
-FROM brazildatacube/base:0.1
+FROM registry.dpi.inpe.br/brazildatacube/python-deploy:0.0.1
 
-RUN apt-get update && apt-get install -y build-essential
+RUN apk --update add build-essential
 
-ADD . /bdc-oauth
+COPY . /app
 
-WORKDIR /bdc-oauth
+WORKDIR /app
 
 RUN pip3 install -r requirements.txt
-
-VOLUME /data
-
-CMD [ "python3", "manage.py", "run" ]
