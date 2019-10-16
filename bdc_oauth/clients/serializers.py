@@ -7,7 +7,7 @@ from flask_restplus import fields
 def get_client_serializer():
     schema = {
         "_id": fields.String(),
-        "user_id": fields.String(),
+        "user_id": fields.List(fields.String()),
         "client_name": fields.String(),
         "client_uri": fields.String(),
         "redirect_uri": fields.String(),

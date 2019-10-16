@@ -114,17 +114,3 @@ class UserPassController(APIResource):
         return {
             "message": "Password updated!"
         }
-
-
-@api.route('/<id>/clients')
-class UserClientsController(APIResource):
-
-    @jwt_admin_me_required
-    def get(self, id):
-        """
-        list all authorized clients of a specific user
-        """
-        clients = UsersBusiness.list_clients_authorized(id)
-        clients = clients[0]['clients'] if len(clients) else []
-
-        return marshal({"clients": clients}, get_clients_serializer())
