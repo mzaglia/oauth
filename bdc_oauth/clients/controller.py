@@ -5,7 +5,7 @@ from flask_restplus import marshal
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 from bdc_core.utils.flask import APIResource
 
-from bdc_oauth.auth.decorators import jwt_required, jwt_admin_required, jwt_author_required, jwt_admin_author_required
+from bdc_oauth.auth.decorators import jwt_required, jwt_admin_required, jwt_author_required, jwt_admin_author_required, jwt_me_required
 from bdc_oauth.clients import ns
 from bdc_oauth.clients.business import ClientsBusiness
 from bdc_oauth.clients.parsers import validate
@@ -116,15 +116,15 @@ class ClientStatusController(APIResource):
         }
 
 
-@api.route('/users/<user_id>')
+@api.route('/users/<id>')
 class AdminClientsController(APIResource):
 
-    @jwt_admin_required
-    def get(self, user_id):
+    @jwt_me_required
+    def get(self, id):
         """
         list clients created by a user
         """
-        clients = ClientsBusiness.list_by_userid(user_id)
+        clients = ClientsBusiness.list_by_userid(id)
         return marshal({"clients": clients}, get_clients_serializer())
 
 
