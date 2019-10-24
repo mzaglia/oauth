@@ -4,7 +4,7 @@ formatting the return of the client controllers
 
 from flask_restplus import fields
 
-def get_client_serializer():
+def get_client_serializer(full=False):
     schema = {
         "_id": fields.String(),
         "user_id": fields.List(fields.String()),
@@ -14,12 +14,15 @@ def get_client_serializer():
         "created_at": fields.DateTime(),
         "expired_at": fields.DateTime(),
     }
+    if full:
+        schema['type_secret'] = fields.String()
+        schema['client_secret'] = fields.String()
     return schema
 
 
-def get_clients_serializer():
+def get_clients_serializer(full=False):
     return {
-        'clients': fields.List(fields.Nested(get_client_serializer()))
+        'clients': fields.List(fields.Nested(get_client_serializer(full)))
     }
 
 

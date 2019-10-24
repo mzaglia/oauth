@@ -46,7 +46,7 @@ class ClientsController(APIResource):
 @api.route('/<client_id>')
 class ClientController(APIResource):
 
-    @jwt_required
+    @jwt_author_required
     def get(self, client_id):
         """
         list information from an active customer
@@ -55,7 +55,7 @@ class ClientController(APIResource):
         if not client:
             raise NotFound("Client not Found!")
 
-        return marshal(client, get_client_serializer()), 200
+        return marshal(client, get_client_serializer(True)), 200
 
     @jwt_author_required
     def put(self, client_id):
@@ -125,7 +125,7 @@ class AdminClientsController(APIResource):
         list clients created by a user
         """
         clients = ClientsBusiness.list_by_userid(id)
-        return marshal({"clients": clients}, get_clients_serializer())
+        return marshal({"clients": clients}, get_clients_serializer(True))
 
 
 @api.route('/<client_id>/author/<user_id>')
