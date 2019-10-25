@@ -215,6 +215,9 @@ class ClientsBusiness():
         """
         update in mongodb
         """
+        if len(client['user_id']) <= 1:
+            return False
+
         if ObjectId(user_id) in client['user_id']:
             client['user_id'] = [user for user in client['user_id'] if ObjectId(user_id) != user]
         try:
