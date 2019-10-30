@@ -5,7 +5,7 @@ from flask_restplus import marshal
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 from bdc_core.utils.flask import APIResource
 
-from bdc_oauth.auth.decorators import jwt_required, jwt_admin_required, jwt_author_required, jwt_admin_author_required
+from bdc_oauth.auth.decorators import jwt_required, jwt_admin_required, jwt_author_required, jwt_admin_author_required, jwt_me_required
 from bdc_oauth.clients import ns
 from bdc_oauth.clients.business import ClientsBusiness
 from bdc_oauth.clients.parsers import validate
@@ -43,22 +43,22 @@ class ClientsController(APIResource):
         return marshal(client, get_client_serializer())
 
 
-@api.route('/<id>')
+@api.route('/<client_id>')
 class ClientController(APIResource):
 
-    @jwt_required
-    def get(self, id):
+    @jwt_author_required
+    def get(self, client_id):
         """
         list information from an active customer
         """
-        client = ClientsBusiness.get_by_id(id)
+        client = ClientsBusiness.get_by_id(client_id)
         if not client:
             raise NotFound("Client not Found!")
 
-        return marshal(client, get_client_serializer()), 200
+        return marshal(client, get_client_serializer(True)), 200
 
     @jwt_author_required
-    def put(self, id):
+    def put(self, client_id):
         """
         update client
         """
@@ -66,7 +66,7 @@ class ClientController(APIResource):
         if status is False:
             raise BadRequest(json.dumps(data))
 
-        client = ClientsBusiness.update(id, data)
+        client = ClientsBusiness.update(client_id, data)
         if not client:
             raise InternalServerError('Error updating client!')
 
@@ -75,11 +75,11 @@ class ClientController(APIResource):
         }
 
     @jwt_author_required
-    def delete(self, id):
+    def delete(self, client_id):
         """
         delete client
         """
-        status = ClientsBusiness.delete(id)
+        status = ClientsBusiness.delete(client_id)
         if not status:
             raise NotFound("Client not Found!")
 
@@ -116,14 +116,38 @@ class ClientStatusController(APIResource):
         }
 
 
-@api.route('/<user_id>')
+@api.route('/users/<id>')
 class AdminClientsController(APIResource):
 
-    @jwt_admin_required
-    def get(self, user_id):
+    @jwt_me_required
+    def get(self, id):
         """
         list clients created by a user
         """
-        clients = ClientsBusiness.list_by_userid(user_id)
-        return marshal({"clients": clients}, get_clients_serializer())
+        clients = ClientsBusiness.list_by_userid(id)
+        return marshal({"clients": clients}, get_clients_serializer(True))
+
+
+@api.route('/<client_id>/author/<user_id>')
+class AdminAuthorsClientsController(APIResource):
+
+    @jwt_author_required
+    def post(self, client_id, user_id):
+        """
+        add new author in client/application
+        """
+        _ = ClientsBusiness.add_author(client_id, user_id)
+        return {
+            "message": "Updated client!"
+        }
+
+    @jwt_author_required
+    def delete(self, client_id, user_id):
+        """
+        remove author in client/application
+        """
+        _ = ClientsBusiness.delete_author(client_id, user_id)
+        return {
+            "message": "Updated client!"
+        }
 

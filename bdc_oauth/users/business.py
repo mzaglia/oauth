@@ -129,37 +129,3 @@ class UsersBusiness():
         except Exception:
             return False
 
-    @classmethod
-    def list_clients_authorized(cls, id):
-        model = cls.init_infos()['model']
-
-        clients = model.aggregate([
-            {
-                "$unwind": "$clients_authorized"
-            },
-            {
-                "$lookup": {
-                    "from": "clients",
-                    "localField": "clients_authorized",
-                    "foreignField": "_id",
-                    "as": "clients"
-                }
-            },
-            {
-                "$match": {
-                    "_id": ObjectId(id),
-                    "deleted_at": None,
-                    "$or": [
-                        { "clients.expired_at": None },
-                        { "clients.expired_at": { "$gt": datetime.now() } }
-                    ]
-                }
-            },
-            {
-                "$project": {
-                    "_id": 0,
-                    "clients": 1
-                }
-            }
-        ])
-        return list(clients)

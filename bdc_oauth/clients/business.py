@@ -69,7 +69,7 @@ class ClientsBusiness():
                 { "expired_at": None }
             ]
         })
-        return clients
+        return list(clients)
 
     @classmethod
     def create(cls, user_id, client_infos):
@@ -95,7 +95,7 @@ class ClientsBusiness():
         """
         create client credentials
         """
-        client_infos['user_id'] = user['_id']
+        client_infos['user_id'] = [user['_id']]
         client_infos['created_at'] = datetime.now()
         client_infos['expired_at'] = client_infos.get('expired_at', None)
 
@@ -172,6 +172,54 @@ class ClientsBusiness():
         """
         update in mongodb
         """
+        try:
+            model.update_one({"_id": ObjectId(id)}, {"$set": client})
+            return True
+        except Exception:
+            return False
+
+
+    @classmethod
+    def add_author(cls, id, user_id):
+        model = cls.init_infos()['model']
+
+        """
+        checks whether the user exists
+        """
+        client = cls.get_by_id(id)
+        if not client:
+            raise NotFound('Client not Found!')
+
+        """
+        update in mongodb
+        """
+        if ObjectId(user_id) not in client['user_id']:
+            client['user_id'].append(ObjectId(user_id))
+        try:
+            model.update_one({"_id": ObjectId(id)}, {"$set": client})
+            return True
+        except Exception:
+            return False
+
+    @classmethod
+    def delete_author(cls, id, user_id):
+        model = cls.init_infos()['model']
+
+        """
+        checks whether the user exists
+        """
+        client = cls.get_by_id(id)
+        if not client:
+            raise NotFound('Client not Found!')
+
+        """
+        update in mongodb
+        """
+        if len(client['user_id']) <= 1:
+            return False
+
+        if ObjectId(user_id) in client['user_id']:
+            client['user_id'] = [user for user in client['user_id'] if ObjectId(user_id) != user]
         try:
             model.update_one({"_id": ObjectId(id)}, {"$set": client})
             return True
