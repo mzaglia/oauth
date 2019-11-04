@@ -5,7 +5,7 @@ from flask_restplus import marshal
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound, Forbidden
 from bdc_core.utils.flask import APIResource
 
-from bdc_oauth.auth.decorators import jwt_admin_required, jwt_admin_me_required, jwt_me_required, get_userinfo_by_token
+from bdc_oauth.auth.decorators import jwt_admin_required, jwt_admin_me_required, jwt_me_required, get_userinfo_by_token, jwt_author_required
 from bdc_oauth.users import ns
 from bdc_oauth.users.business import UsersBusiness
 from bdc_oauth.users.parsers import validate
@@ -93,6 +93,18 @@ class UserController(APIResource):
         return {
             "message": "Deleted user!"
         }
+
+
+@api.route('/client/<client_id>')
+class UsersClientController(APIResource):
+
+    @jwt_author_required
+    def get(self, client_id):
+        """
+        list users authorized (with scope) by app/client
+        """
+        users = UsersBusiness.get_all_by_client(client_id)
+        return marshal({"users": users}, get_users_serializer())
 
 
 @api.route('/change-password/<id>')

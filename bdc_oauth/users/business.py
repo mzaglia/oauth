@@ -32,6 +32,13 @@ class UsersBusiness():
             raise NotFound("User not Found!")
 
     @classmethod
+    def get_all_by_client(cls, client_id):
+        model = cls.init_infos()['model']
+        
+        users = model.find({"deleted_at": None, "clients_authorized.id": ObjectId(client_id)}, {"credential.password": 0})
+        return list(users)
+
+    @classmethod
     def create(cls, infos_user, admin=False):
         model = cls.init_infos()['model']
 
