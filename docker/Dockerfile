@@ -1,4 +1,4 @@
-FROM registry.dpi.inpe.br/brazildatacube/python-deploy:0.0.1
+FROM registry.dpi.inpe.br/brazildatacube/python-deploy:0.0.2
 
 RUN apk update \
     && apk add --virtual build-dependencies \
