@@ -55,7 +55,7 @@ class AuthorizationController(APIResource):
     @jwt_author_required
     def post(self, action, user_id, client_id):
         """
-        authorize or revoke authorization from a customer
+        authorize or revoke authorization from a app/client
         """
         if action.lower() not in ['authorize', 'revoke']:
             raise BadRequest('Action not found. Set "authorize or revoke"!')

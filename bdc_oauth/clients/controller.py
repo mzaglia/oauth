@@ -49,7 +49,7 @@ class ClientController(APIResource):
     @jwt_author_required
     def get(self, client_id):
         """
-        list information from an active customer
+        list information from an active app/client
         """
         client = ClientsBusiness.get_by_id(client_id)
         if not client:
@@ -122,7 +122,7 @@ class AdminClientsController(APIResource):
     @jwt_me_required
     def get(self, id):
         """
-        list clients created by a user
+        list clients by a user (if the user is an admin of the app)
         """
         clients = ClientsBusiness.list_by_userid(id)
         return marshal({"clients": clients}, get_clients_serializer(True))
