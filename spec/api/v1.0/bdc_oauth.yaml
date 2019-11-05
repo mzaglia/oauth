@@ -16,7 +16,7 @@ tags:
     description: "Status services"
   - name: "users"
     description: "Users manager"
-  - name: "clients/Apps"
+  - name: "clients"
     description: "Clients/Apps manager"
   - name: "auth"
     description: "Authentication"
