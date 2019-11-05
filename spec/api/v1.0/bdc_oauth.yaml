@@ -10,6 +10,10 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
+    
+servers:
+  - url: 'https://oauth.dpi.inpe.br/api/oauth'
+    description: Production server
 
 tags:
   - name: "status"
