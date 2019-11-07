@@ -1,15 +1,19 @@
 openapi: 3.0.0
 
 info:
-  description: Web service to autentication (Oauth 2) - Brazil Data Cube
+  description: Web service to authentication (Oauth 2) - OBT
   version: "1.0"
   title: API Oauth2
   contact:
-    name: Brazil Data Cube
+    name: OBT-INPE
     email: example@example.com
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
+    
+servers:
+  - url: 'https://oauth.dpi.inpe.br/api'
+    description: Production server
 
 tags:
   - name: "status"
@@ -17,12 +21,12 @@ tags:
   - name: "users"
     description: "Users manager"
   - name: "clients"
-    description: "Clients manager"
+    description: "Clients/Apps manager"
   - name: "auth"
     description: "Authentication"
 
 paths:
-  /oauth/status:
+  /oauth/status/:
     get:
       tags:
         - "status"
@@ -37,8 +41,6 @@ paths:
                 properties:
                   status:
                     type: string
-                  success:
-                    type: boolean
 
   /oauth/users/:
     get:
@@ -179,29 +181,29 @@ paths:
                   message:
                     type: string
 
-  /oauth/users/{id}/clients:
+  /oauth/users/client/{id}:
     get:
       tags:
         - "users"
-      summary: "List Clients By User"
-      description: "List clients of a given user"
+      summary: "List users by Clients/Apps"
+      description: "List users authorized (with scope) by app/client"
       parameters:
         - in: "path"
           name: "id"
           required: true
-          description: "User ID"
+          description: "Client ID"
       responses:
         200:
-          description: Clients informations
+          description: Users informations
           content:
             application/json:
               schema:
                   type: object
                   properties:
-                    clients:
+                    users:
                       type: array
                       items:
-                        $ref: "#/response/schemas/Client"
+                        $ref: "#/response/schemas/User"
 
   /oauth/clients/:
     get:
@@ -369,12 +371,12 @@ paths:
                   message:
                     type: string
 
-  /oauth/clients/{user_id}:
+  /oauth/clients/users/{user_id}:
     get:
       tags:
         - "clients"
       summary: "List Client By UserId"
-      description: "List of clients created by a user"
+      description: "List clients by a user (if the user is an admin of the app)"
       parameters:
         - in: "path"
           name: "user_id"
@@ -392,18 +394,22 @@ paths:
                       type: array
                       items:
                         $ref: "#/response/schemas/Client"
-
-  /oauth/clients/{id}/new-secret:
-    put:
+  
+  /oauth/clients/<client_id>/author/<user_id>:
+    get:
       tags:
         - "clients"
-      summary: "Generate New Secret"
-      description: "To generate a new secret for a client"
+      summary: "Add new author"
+      description: "Add new author in client/application"
       parameters:
         - in: "path"
-          name: "id"
+          name: "client_id"
           required: true
           description: "Client ID"
+        - in: "path"
+          name: "user_id"
+          required: true
+          description: "User ID"
       responses:
         200:
           description: "Success"
@@ -414,7 +420,34 @@ paths:
                 properties:
                   success:
                     type: boolean
-                  new_secret:
+                  message:
+                    type: string
+  
+    delete:
+      tags:
+        - "clients"
+      summary: "Delete author"
+      description: "Delete author in client/application"
+      parameters:
+        - in: "path"
+          name: "client_id"
+          required: true
+          description: "Client ID"
+        - in: "path"
+          name: "user_id"
+          required: true
+          description: "User ID"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
                     type: string
 
   /oauth/auth/login:
@@ -445,6 +478,10 @@ paths:
                 properties:
                   user_id:
                     type: string
+                  grants:
+                    type: array
+                    items:
+                      type: string
                   access_token:
                     type: string
 
@@ -470,6 +507,10 @@ paths:
               schema:
                 type: object
                 properties:
+                  user_id:
+                    type: string
+                  callback:
+                    type: string
                   token:
                     type: string
                   access_token:
@@ -560,6 +601,8 @@ request:
           type: string
         occupation:
           type: string
+        admin:
+          type: boolean
         password:
           type: string
           required: true
@@ -569,12 +612,6 @@ request:
     User:
       type: object
       properties:
-        name:
-          type: string
-          required: true
-        email:
-          type: integer
-          required: true
         institution:
           type: string
         occupation:
@@ -582,6 +619,9 @@ request:
     UserPassword:
       type: object
       properties:
+        old_password:
+          type: string
+          required: true
         password:
           type: string
           required: true
@@ -596,6 +636,13 @@ request:
           required: true
         client_uri:
           type: string
+          required: true
+        client_secret:
+          type: string
+          required: true
+        type_secret:
+          type: string
+          description: string or file
           required: true
         redirect_uri:
           type: string
@@ -658,11 +705,15 @@ response:
         _id:
           type: string
         user_id:
-          type: string
+          type: array
+          items:
+            type: string
         client_name:
           type: string
         client_secret:
           type: string
+        type_secret:
+          ype: string
         client_uri:
           type: string
         redirect_uri:
