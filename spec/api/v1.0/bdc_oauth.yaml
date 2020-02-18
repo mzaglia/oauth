@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Web service to authentication (Oauth 2) - OBT
-  version: "1.0"
+  version: "0.2.0"
   title: API Oauth2
   contact:
     name: OBT-INPE
