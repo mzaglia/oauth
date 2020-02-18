@@ -72,7 +72,7 @@ setup(
     name='bdc-oauth',
     version=version,
     description=__doc__,
-    # long_description=readme + '\n\n' + history,
+    long_description=readme + '\n\n' + history,
     keywords='INPE - OBT OAuth 2.0',
     license='MIT',
     author='INPE',

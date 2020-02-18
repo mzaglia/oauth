@@ -6,9 +6,9 @@
     under the terms of the MIT License; see LICENSE file for more details.
     
 
-=============================
-Brazil Data Cube Tiler
-=============================
+=============
+OBT OAuth 2.0
+=============
 
 .. image:: https://img.shields.io/badge/license-MIT-green
         :target: https://github.com//brazil-data-cube/bdc-oauth/blob/master/LICENSE
@@ -50,10 +50,9 @@ See `INSTALL.rst <./INSTALL.rst>`_.
 
 
 Running
-============
+=======
 
 See `RUNNING.rst <./RUNNING.rst>`_.
-
 
 
 License
