@@ -8,6 +8,7 @@
 
 from bdc_core.utils.flask import APIResource
 
+from bdc_oauth import __version__
 from bdc_oauth.status import ns
 
 api = ns
@@ -20,5 +21,8 @@ class StatusController(APIResource):
         Returns application status
         """
         return {
-            "status": "Running"
+            'version': __version__,
+            'message': 'Running',
+            'description': 'Brazil Data Cube Project (http://brazildatacube.org)'
         }
+        

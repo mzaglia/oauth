@@ -55,6 +55,19 @@ Running
 See `RUNNING.rst <./RUNNING.rst>`_.
 
 
+Usage
+=====
+
+Get status
+----------
+
+.. code-block:: shell
+
+        $ curl http://localhost:5000/oauth/status
+
+for more information, see a `SPEC API <https://github.com/brazil-data-cube/oauth/tree/master/spec>`_.
+
+
 License
 =======
 
