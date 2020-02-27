@@ -50,7 +50,7 @@ install_requires = [
     'Flask-JWT==0.3.2',
     'Flask-RESTful==0.3.6',
     'pytz==2017.3',
-    'six==1.11.0',
+    'six==1.12.0',
     'requests==2.20.0',
     'workalendar==2.3.1',
     'marshmallow==2.15.1',

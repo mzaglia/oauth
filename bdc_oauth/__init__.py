@@ -46,6 +46,8 @@ def create_app(config_name='DevelopmentConfig'):
         app.register_blueprint(bp)
 
     return app
+
+app = create_app()
     
 __all__ = (
     '__version__',

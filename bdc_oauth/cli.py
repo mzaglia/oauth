@@ -7,34 +7,25 @@
 #
 
 import click
-from flask.cli import FlaskGroup, with_appcontext
+from flask.cli import FlaskGroup
 
-from . import create_app
-from .config import Config
+from . import app
 
-
-def create_cli(create_app=None):
+def create_cli():
     """Define a Wrapper creation of Flask App in order to attach into flask click.
     Args:
          create_app (function) - Create app factory (Flask)
     """
-    def create_cli_app(info):
+    def create_cli_app():
         """Describe flask factory to create click command."""
-        if create_app is None:
-            info.create_app = None
-
-            app = info.load_app()
-        else:
-            app = create_app()
-
         return app
 
     @click.group(cls=FlaskGroup, create_app=create_cli_app)
     def cli(**params):
-        """Command line interface for bdc_collection_builder."""
+        """Command line interface for bdc_oauth."""
         pass
 
     return cli
 
 
-cli = create_cli(create_app=create_app)
+cli = create_cli()
