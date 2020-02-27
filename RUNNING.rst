@@ -30,8 +30,7 @@ or
 
 .. code-block:: shell
 
-        $ PORT=5000 \
-            MONGO_USER=bdc \
+        $ MONGO_USER=bdc \
             MONGO_PASSWORD=bdc#key#2019 \
             MONGO_HOST=mongo-oauth \
             MONGO_PORT=27017 \

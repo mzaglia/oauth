@@ -7,7 +7,6 @@ services:
   #     dockerfile: ./docker/Dockerfile
   #   container_name: bdc-oauth
   #   environment:
-  #     - PORT=5000
   #     - MONGO_USER=bdc
   #     - MONGO_PASSWORD=bdc#key#2019
   #     - MONGO_HOST=mongo-oauth
@@ -25,7 +24,7 @@ services:
   #   volumes:
   #     - "./certs:/certs"
   #   ports:
-  #     - "5015:5000"
+  #     - "5015:80"
   #   restart: always
   #   networks:
   #     - bdc-application
