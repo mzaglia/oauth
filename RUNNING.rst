@@ -20,7 +20,7 @@ if you do not have these services, run the docker-compose.yml file
 Running http server
 -------------------
 
-Set environment variables in command line or edit file bdc_oauth/config.py. Then, run the application.
+Set environment variables in command line or edit file: bdc_oauth/config.py. Then, run the application.
 
 .. code-block:: shell
 
