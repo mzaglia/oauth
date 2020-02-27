@@ -9,15 +9,23 @@
 exclude doc/sphinx/_build
 exclude docker
 exclude examples
+exclude spec
+exclude .dockerignore
+exclude .pylintrc
+include *.in
 include *.rst
 include *.sh
 include *.txt
+include *.py
+include *.yml
 include LICENSE
 include pytest.ini
 recursive-exclude doc/model *
 recursive-exclude doc/sphinx/_build *
-recursive-exclude docker/ *
-recursive-exclude examples/ *
+recursive-exclude docker *
+recursive-exclude examples *
+recursive-exclude spec *
+recursive-include bdc_oauth *.txt
 recursive-include doc *.bat
 recursive-include doc *.css
 recursive-include doc *.py

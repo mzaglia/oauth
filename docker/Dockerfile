@@ -8,4 +8,4 @@ COPY . /app
 
 WORKDIR /app
 
-RUN pip3 install -e .
+RUN pip3 install -e .['all']

@@ -1,16 +1,26 @@
-import os
+#
+# This file is part of OBT OAuth 2.0.
+# Copyright (C) 2019-2020 INPE.
+#
+# OBT OAuth 2.0 is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+
 import json
 from flask import request
 from flask_restplus import marshal
-from werkzeug.exceptions import InternalServerError, BadRequest, NotFound, Forbidden
 from bdc_core.utils.flask import APIResource
+from werkzeug.exceptions import (BadRequest, Forbidden, NotFound,
+                                 InternalServerError)
 
-from bdc_oauth.auth.decorators import jwt_admin_required, jwt_admin_me_required, jwt_me_required, get_userinfo_by_token, jwt_author_required
+from bdc_oauth.auth.decorators import (
+    jwt_admin_required, jwt_admin_me_required, jwt_me_required,
+    get_userinfo_by_token, jwt_author_required)
 from bdc_oauth.users import ns
 from bdc_oauth.users.business import UsersBusiness
 from bdc_oauth.users.parsers import validate
-from bdc_oauth.users.serializers import get_user_serializer, get_users_serializer
-from bdc_oauth.clients.serializers import get_clients_serializer
+from bdc_oauth.users.serializers import (get_user_serializer,
+                                         get_users_serializer)
 
 api = ns
 

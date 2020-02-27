@@ -6,7 +6,6 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 
-
 import os
 from flask import Flask
 from flask_bcrypt import Bcrypt

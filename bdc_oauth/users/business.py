@@ -1,8 +1,17 @@
+#
+# This file is part of OBT OAuth 2.0.
+# Copyright (C) 2019-2020 INPE.
+#
+# OBT OAuth 2.0 is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+
 from copy import deepcopy
 from datetime import datetime
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.exceptions import InternalServerError, NotFound, Conflict, Forbidden
+from werkzeug.exceptions import (InternalServerError, 
+                                 NotFound, Conflict, Forbidden)
 
 from bdc_oauth.utils.base_mongo import mongo
 
