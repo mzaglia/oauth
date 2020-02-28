@@ -190,8 +190,14 @@ class AuthBusiness():
 
         else:
             ''' Revoke client '''
-            new_list = filter(lambda x: str(
-                x["id"]) != client_id, user['clients_authorized'])
+            for client in user['clients_authorized']:
+                if str(client['id']) == client_id:
+                    new_list.append({
+                        'id': client['id'],
+                        'scope': [item for item in client['scope'] if item not in scope]
+                    })
+                else:
+                    new_list.append(client)
 
         try:
             model.update_one({"_id": ObjectId(user_id)}, {
