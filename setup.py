@@ -42,7 +42,7 @@ setup_requires = [
 ]
 
 install_requires = [
-    'bdc-core @ git+git://github.com/brazil-data-cube/bdc-core.git@master#egg=bdc-core',
+    'bdc-core @ git+git://github.com/brazil-data-cube/bdc-core.git@v0.2.0#egg=bdc-core',
     'Flask>=1.0.3',
     'flask_bcrypt==0.7.1',
     'flask_restplus==0.12.1',
