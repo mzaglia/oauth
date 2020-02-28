@@ -23,7 +23,7 @@ Execute the following command to install `node modules` dependencies:
 
         $ npm install
 
-After that, generate Cube builder AWS documentation:
+After that, generate OAuth documentation:
 
 .. code-block:: shell
 
