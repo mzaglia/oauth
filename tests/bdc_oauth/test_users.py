@@ -7,9 +7,9 @@
 #
 
 import json
-from fixture import test_client
 from datetime import datetime
 from bson.objectid import ObjectId
+from fixture import test_client
 from bdc_oauth.users.business import UsersBusiness
 from bdc_oauth.utils.base_mongo import mongo
 
@@ -51,15 +51,6 @@ def login(test_client, username='admin'):
         password='abcd1234'
     ))
     return response, json.loads(response.data)['access_token']
-
-
-def test_login(test_client):
-    _, _ = setUp()
-    response, _ = login(test_client)
-    r_json = json.loads(response.data)
-    assert response.status_code == 200
-    assert 'access_token' in r_json
-    assert 'user_id' in r_json
 
 
 ###################

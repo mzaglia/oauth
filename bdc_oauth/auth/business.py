@@ -113,6 +113,8 @@ class AuthBusiness():
     @classmethod
     def token(cls, user_id, service, scope=''):
         client_infos = ClientsBusiness.get_by_name(service)
+        if not client_infos:
+            raise Forbidden('Client not found!')
         user = UsersBusiness.get_by_id(user_id)
 
         client = list(
@@ -129,7 +131,7 @@ class AuthBusiness():
         if scope:
             params = scope.split(':')
             if len(params) != 3:
-                return BadRequest('Invalid scope!')
+                raise BadRequest('Invalid scope!')
 
             typ = params[0]
             name = params[1]
