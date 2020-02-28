@@ -6,6 +6,10 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 
-from flask_redis import FlaskRedis
+"""Version information for OBT OAuth 2.0.
+This file is imported by ``bdc_oauth.__init__``,
+and parsed by ``setup.py``.
+"""
 
-redis = FlaskRedis()
+
+__version__  = '0.2.0'

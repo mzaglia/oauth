@@ -1,12 +1,17 @@
-# Minimal makefile for Sphinx documentation
+#
+# This file is part of OBT OAuth 2.0
+# Copyright (C) 2019-2020 INPE.
+#
+# OBT OAuth 2.0 free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
 #
 
 # You can set these variables from the command line, and also
 # from the environment for the first two.
 SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
-SOURCEDIR     = source
-BUILDDIR      = build
+SOURCEDIR     = .
+BUILDDIR      = _build
 
 # Put it first so that "make" without argument is like "make help".
 help:
