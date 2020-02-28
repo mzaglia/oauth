@@ -23,5 +23,4 @@ class TestUtils(unittest.TestCase):
 
     def test_random_string_error(self):
         self.assertNotEqual(22, len(self.key))
-
-    
+  
