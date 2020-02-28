@@ -57,7 +57,7 @@ class UsersController(APIResource):
         if not user:
             raise InternalServerError('Error creating user!')
 
-        return marshal(user, get_user_serializer()), 200
+        return marshal(user, get_user_serializer()), 201
 
 
 @api.route('/<id>')
