@@ -14,8 +14,9 @@ OBT OAuth 2.0
         :target: https://github.com//brazil-data-cube/bdc-oauth/blob/master/LICENSE
         :alt: Documentation Status
 
-.. .. image:: https://travis-ci.org/brazil-data-cube/bdc-oauth.svg?branch=master
-..         :target: https://travis-ci.org/brazil-data-cube/lccs-db
+.. image:: http://www.dpi.inpe.br/jenkins/view/brazil-data-cube/job/brazil-data-cube/job/oauth-tests/badge/icon
+        :target: http://www.dpi.inpe.br/jenkins/view/brazil-data-cube/job/brazil-data-cube/job/oauth-tests
+        :alt: Build Status
 
 .. .. image:: https://coveralls.io/repos/github/brazil-data-cube/bdc-oauth/badge.svg?branch=master
 ..         :target: https://coveralls.io/github/brazil-data-cube/bdc-oauth?branch=master
