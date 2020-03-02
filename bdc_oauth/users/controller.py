@@ -18,7 +18,7 @@ from bdc_oauth.auth.decorators import (
     get_userinfo_by_token, jwt_author_required)
 from bdc_oauth.users import ns
 from bdc_oauth.users.business import UsersBusiness
-from bdc_oauth.users.parsers import validate
+from bdc_oauth.users.validators import validate
 from bdc_oauth.users.serializers import (get_user_serializer,
                                          get_users_serializer)
 

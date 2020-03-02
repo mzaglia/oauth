@@ -12,11 +12,13 @@ from flask_restplus import marshal
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 from bdc_core.utils.flask import APIResource
 
-from bdc_oauth.auth.decorators import jwt_required, jwt_admin_required, jwt_author_required, jwt_admin_author_required, jwt_me_required
+from bdc_oauth.auth.decorators import jwt_required, jwt_admin_required, \
+    jwt_author_required, jwt_admin_author_required, jwt_me_required
 from bdc_oauth.clients import ns
 from bdc_oauth.clients.business import ClientsBusiness
-from bdc_oauth.clients.parsers import validate
-from bdc_oauth.clients.serializers import get_client_serializer, get_clients_serializer
+from bdc_oauth.clients.validators import validate
+from bdc_oauth.clients.serializers import get_client_serializer, \
+    get_clients_serializer
 
 api = ns
 
@@ -47,7 +49,7 @@ class ClientsController(APIResource):
         if not client:
             raise InternalServerError('Error creating client!')
 
-        return marshal(client, get_client_serializer())
+        return marshal(client, get_client_serializer()), 201
 
 
 @api.route('/<client_id>')
