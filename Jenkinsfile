@@ -36,7 +36,7 @@ def generateDocs() {
 
 def unittest() {
     stage('unittest') {
-        sh 'docker run --rm -i --name oauth_test --net host ${tagName} bash -c ./run-test.sh'
+        sh 'docker run --rm -i -v $(pwd):/app --name oauth_test --net host ${tagName} bash -c ./run-test.sh'
     }
 }
 
