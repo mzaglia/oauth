@@ -23,7 +23,7 @@ def checkoutProject() {
 
 def prepareEnvironment() {
     stage('prepare-environment') {
-        sh 'docker run --name mongo-oauth-test -p 27018:27017 -e MONGO_INITDB_ROOT_USERNAME=mongo -e MONGO_INITDB_ROOT_PASSWORD=mongo mongo'
+        sh 'docker run --name mongo-oauth-test -p 27018:27017 -d -e MONGO_INITDB_ROOT_USERNAME=mongo -e MONGO_INITDB_ROOT_PASSWORD=mongo mongo'
         sh 'docker build --tag ${tagName} -f docker/Dockerfile .'
     }
 }
