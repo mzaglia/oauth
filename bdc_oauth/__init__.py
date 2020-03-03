@@ -7,6 +7,7 @@
 #
 
 import os
+
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -48,7 +49,7 @@ def create_app(config_name='DevelopmentConfig'):
     return app
 
 app = create_app()
-    
+
 __all__ = (
     '__version__',
     'create_app',

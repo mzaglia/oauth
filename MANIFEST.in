@@ -12,6 +12,7 @@ exclude examples
 exclude spec
 exclude .dockerignore
 exclude .pylintrc
+exclude uwsgi.ini
 include *.in
 include *.rst
 include *.sh

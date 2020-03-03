@@ -13,8 +13,8 @@ from bdc_core.utils.flask import APIResource
 
 from bdc_oauth.auth import ns
 from bdc_oauth.auth.business import AuthBusiness
-from bdc_oauth.auth.decorators import get_userinfo_by_token, jwt_admin_required, jwt_author_required
-from bdc_oauth.auth.parsers import validate
+from bdc_oauth.auth.decorators import get_userinfo_by_token, jwt_author_required
+from bdc_oauth.auth.validators import validate
 
 api = ns
 

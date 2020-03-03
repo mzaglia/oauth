@@ -11,6 +11,7 @@ from flask.cli import FlaskGroup
 
 from . import app
 
+
 def create_cli():
     """Define a Wrapper creation of Flask App in order to attach into flask click.
     Args:

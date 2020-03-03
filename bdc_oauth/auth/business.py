@@ -113,6 +113,8 @@ class AuthBusiness():
     @classmethod
     def token(cls, user_id, service, scope=''):
         client_infos = ClientsBusiness.get_by_name(service)
+        if not client_infos:
+            raise Forbidden('Client not found!')
         user = UsersBusiness.get_by_id(user_id)
 
         client = list(
@@ -129,7 +131,7 @@ class AuthBusiness():
         if scope:
             params = scope.split(':')
             if len(params) != 3:
-                return BadRequest('Invalid scope!')
+                raise BadRequest('Invalid scope!')
 
             typ = params[0]
             name = params[1]
@@ -190,8 +192,14 @@ class AuthBusiness():
 
         else:
             ''' Revoke client '''
-            new_list = filter(lambda x: str(
-                x["id"]) != client_id, user['clients_authorized'])
+            for client in user['clients_authorized']:
+                if str(client['id']) == client_id:
+                    new_list.append({
+                        'id': client['id'],
+                        'scope': [item for item in client['scope'] if item not in scope]
+                    })
+                else:
+                    new_list.append(client)
 
         try:
             model.update_one({"_id": ObjectId(user_id)}, {

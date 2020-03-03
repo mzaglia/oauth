@@ -18,7 +18,7 @@ from bdc_oauth.auth.decorators import (
     get_userinfo_by_token, jwt_author_required)
 from bdc_oauth.users import ns
 from bdc_oauth.users.business import UsersBusiness
-from bdc_oauth.users.parsers import validate
+from bdc_oauth.users.validators import validate
 from bdc_oauth.users.serializers import (get_user_serializer,
                                          get_users_serializer)
 
@@ -57,7 +57,7 @@ class UsersController(APIResource):
         if not user:
             raise InternalServerError('Error creating user!')
 
-        return marshal(user, get_user_serializer()), 200
+        return marshal(user, get_user_serializer()), 201
 
 
 @api.route('/<id>')
