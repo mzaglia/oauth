@@ -12,6 +12,8 @@ exclude examples
 exclude spec
 exclude .dockerignore
 exclude .pylintrc
+exclude main.py
+exclude prestart.sh
 exclude uwsgi.ini
 include *.in
 include *.rst

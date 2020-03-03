@@ -25,9 +25,11 @@ class Config():
     EXPIRES_IN_CLIENT = int(os.environ.get('EXPIRES_IN_CLIENT', '86400'))
 
     MONGO_URI = 'mongodb://{}:{}@{}:{}/{}?authSource=admin'.format(
-        os.environ.get('MONGO_USER'), os.environ.get('MONGO_PASSWORD'),
-        os.environ.get('MONGO_HOST'), os.environ.get('MONGO_PORT'),
-        os.environ.get('MONGO_DBNAME'))
+        os.environ.get('MONGO_USER', 'mongo'),
+        os.environ.get('MONGO_PASSWORD', 'mongo'),
+        os.environ.get('MONGO_HOST', 'localhost'),
+        os.environ.get('MONGO_PORT', '27018'),
+        os.environ.get('MONGO_DBNAME', 'bdc_oauth'))
     REDIS_URL = "redis://:{}@{}:{}/0".format(
         os.environ.get('REDIS_PASSWORD', 'passRedis'),
         os.environ.get('REDIS_HOST', 'redis'),
@@ -48,7 +50,6 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     """Testing Mode (Continous Integration)."""
-
     TESTING = True
     DEBUG = True
 
