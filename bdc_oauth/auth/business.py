@@ -129,7 +129,7 @@ class AuthBusiness():
 
         ''' filter and valid scope '''
         if scope:
-            params = scope.split(':')
+            params = scope.lower().split(':')
             if len(params) != 3:
                 raise BadRequest('Invalid scope!')
 
@@ -140,7 +140,7 @@ class AuthBusiness():
             for user_scope in client[0]['scope']:
                 if not user_scope:
                     raise Forbidden('Not authorized!')
-                typ_scope, name_scope, actions_scope = user_scope.split(':')
+                typ_scope, name_scope, actions_scope = user_scope.lower().split(':')
 
                 if typ_scope == typ:
                     if name_scope == name or name_scope == '*':
