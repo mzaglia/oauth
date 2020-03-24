@@ -109,6 +109,25 @@ def test_generate_token(test_client):
     assert response.status_code == 200
     assert 'token' in r_json
 
+def test_generate_token_insensitive(test_client):
+    user_admin_info, _ = setUp()
+
+    create_app(user_admin_info['_id'])
+    _, access_token = login(test_client)
+    _ = test_client.post(
+        '/oauth/auth/authorize/{}/{}'.format(
+            user_admin_info['_id'], ObjectId('5e59557579da4ec3ff04a683')),
+        json=dict(scope=['registry:repository:POST']),
+        headers=dict(Authorization='Bearer {}'.format(access_token)))
+
+    response = test_client.get(
+        '/oauth/auth/token?service={}&scope={}'.format(
+            'registry', 'REGISTRY:repository:post'),
+        headers=dict(Authorization='Bearer {}'.format(access_token)))
+    r_json = json.loads(response.data)
+    assert response.status_code == 200
+    assert 'token' in r_json
+
 def test_generate_token_403_without_auth(test_client):
     user_admin_info, _ = setUp()
 
