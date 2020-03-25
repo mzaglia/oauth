@@ -484,6 +484,8 @@ paths:
                       type: string
                   access_token:
                     type: string
+                  expired_date:
+                    type: string
 
   /oauth/auth/token:
     get:
@@ -514,6 +516,8 @@ paths:
                   token:
                     type: string
                   access_token:
+                    type: string
+                  expired_date:
                     type: string
 
   /oauth/auth/authorize/{user_id}/{client_id}:
