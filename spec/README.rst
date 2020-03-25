@@ -11,4 +11,4 @@ API SPEC
 
 API SPEC based in OPENAPI 3.0.
 
-To view: `Run the application <./../RUNNING.rst>`_ and access: http://127.0.0.1:5000/docs
+Running: `Run the application <./../RUNNING.rst>`_ and access: http://localhost:5000/docs

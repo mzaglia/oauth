@@ -64,7 +64,7 @@ Get status
 
 .. code-block:: shell
 
-        $ curl http://localhost:5000/oauth/status
+        $ curl http://localhost:5000/oauth
 
 for more information, see a `SPEC API <https://github.com/brazil-data-cube/oauth/tree/master/spec>`_.
 
