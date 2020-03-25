@@ -1,7 +1,6 @@
 .vscode
 
 README.md
-/spec
 /doc/sphinx/_build
 
 /docker

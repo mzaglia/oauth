@@ -9,7 +9,6 @@
 exclude doc/sphinx/_build
 exclude docker
 exclude examples
-exclude spec
 exclude .dockerignore
 exclude .pylintrc
 exclude main.py
@@ -27,7 +26,6 @@ recursive-exclude doc/model *
 recursive-exclude doc/sphinx/_build *
 recursive-exclude docker *
 recursive-exclude examples *
-recursive-exclude spec *
 recursive-include bdc_oauth *.txt
 recursive-include doc *.bat
 recursive-include doc *.css

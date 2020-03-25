@@ -35,7 +35,7 @@ def create_app(config_name='DevelopmentConfig'):
 
     with app.app_context():
         CORS(app, resources={r"/*": {"origins": "*"}})
-        _ = Redoc('./../spec/openapi/v1.0/bdc_oauth.yaml', app)
+        _ = Redoc('./spec/openapi.yaml', app)
 
         # DB
         from bdc_oauth.utils.base_mongo import mongo
