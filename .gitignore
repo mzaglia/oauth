@@ -29,7 +29,6 @@ MANIFEST
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
-*.spec
 
 # Installer logs
 pip-log.txt
@@ -65,7 +64,6 @@ instance/
 
 # Sphinx documentation
 docs/_build/
-spec/node_modules
 
 # PyBuilder
 target/
@@ -108,8 +106,6 @@ venv.bak/
 
 # Pycharm
 .idea
-
-/spec/node_modules
 
 /certs
 

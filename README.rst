@@ -66,7 +66,7 @@ Get status
 
         $ curl http://localhost:5000/oauth
 
-for more information, see a `SPEC API <https://github.com/brazil-data-cube/oauth/tree/master/spec>`_.
+for more information, see a SPEC API in: http://localhost:5000/tiler/docs
 
 
 License
