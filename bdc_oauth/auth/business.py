@@ -101,8 +101,8 @@ class AuthBusiness():
         user_id = str(user['_id'])
         token = cls.encode_auth_token(
             user_id, user['credential']['grants'], 'user')
-        expired_date = time.mktime(
-            int(time.time()) + int(Config.EXPIRES_IN_AUTH))
+        expired_date = time.mktime(time.localtime(
+            int(time.time()) + int(Config.EXPIRES_IN_AUTH)))
         result = {
             "user_id": user_id,
             "grants": user['credential']['grants'],
@@ -160,8 +160,8 @@ class AuthBusiness():
         token_client = cls.encode_client_token(
             service, typ, name, actions, user, client_infos)
 
-        expired_date = time.mktime(
-            int(time.time()) + int(Config.EXPIRES_IN_CLIENT))
+        expired_date = time.mktime(time.localtime(
+            int(time.time()) + int(Config.EXPIRES_IN_CLIENT)))
         return {
             "user_id": user_id,
             "callback": client_infos['redirect_uri'],
