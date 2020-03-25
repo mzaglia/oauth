@@ -28,7 +28,10 @@ def create_app(config_name='DevelopmentConfig'):
     app = Flask(__name__)
     conf = config.get_settings(config_name)
     app.config.from_object(conf)
-    app.config['REDOC'] = {'title': 'Web service to authentication (Oauth 2) - OBT'}
+    app.config['REDOC'] = {
+        'title': 'Web service to authentication (Oauth 2) - OBT',
+        'spec_route': '/oauth/docs'
+    }
 
     with app.app_context():
         CORS(app, resources={r"/*": {"origins": "*"}})
