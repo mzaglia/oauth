@@ -8,15 +8,13 @@
 
 import jwt
 import time
-from datetime import datetime, timedelta
 from bson.objectid import ObjectId
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 from werkzeug.exceptions import BadRequest, NotFound, Forbidden
 
 from bdc_oauth.config import Config
 from bdc_oauth.users.business import UsersBusiness
 from bdc_oauth.clients.business import ClientsBusiness
-from bdc_oauth.utils.base_mongo import mongo
 from bdc_oauth.utils.helpers import kid_from_crypto_key
 
 
@@ -103,10 +101,14 @@ class AuthBusiness():
         user_id = str(user['_id'])
         token = cls.encode_auth_token(
             user_id, user['credential']['grants'], 'user')
+        expired_date = time.mktime(time.localtime(
+            int(time.time()) + int(Config.EXPIRES_IN_AUTH)))
         result = {
             "user_id": user_id,
             "grants": user['credential']['grants'],
-            "access_token": token.decode('utf8').replace("'", '"')
+            "access_token": token.decode('utf8').replace("'", '"'),
+            "expired_date": time.strftime("%Y-%m-%d %H:%M:%S",
+                                          time.localtime(expired_date))
         }
         return result
 
@@ -158,11 +160,15 @@ class AuthBusiness():
         token_client = cls.encode_client_token(
             service, typ, name, actions, user, client_infos)
 
+        expired_date = time.mktime(time.localtime(
+            int(time.time()) + int(Config.EXPIRES_IN_CLIENT)))
         return {
             "user_id": user_id,
             "callback": client_infos['redirect_uri'],
             "token": token_client.decode('utf8'),
-            "access_token": token_client.decode('utf8')
+            "access_token": token_client.decode('utf8'),
+            "expired_date": time.strftime("%Y-%m-%d %H:%M:%S",
+                                          time.localtime(expired_date))
         }
 
     @classmethod

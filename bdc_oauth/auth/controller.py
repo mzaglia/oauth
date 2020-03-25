@@ -40,7 +40,7 @@ class AuthClientController(APIResource):
 
     def get(self):
         """
-        Generate token to client application
+        Generate token to client applications
         """
         service = request.args['service']
         scope = request.args.get('scope')

@@ -58,7 +58,8 @@ install_requires = [
     'pymongo==3.8.0',
     'flask_pymongo==2.3.0',
     'flask_redis==0.4.0',
-    'cryptography==2.7'
+    'cryptography==2.7',
+    'flask-redoc==0.1.0'
 ]
 
 packages = find_packages()

@@ -11,6 +11,7 @@ import os
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from flask_redoc import Redoc
 
 from . import config
 from .version import __version__
@@ -27,9 +28,14 @@ def create_app(config_name='DevelopmentConfig'):
     app = Flask(__name__)
     conf = config.get_settings(config_name)
     app.config.from_object(conf)
+    app.config['REDOC'] = {
+        'title': 'Web service to authentication (Oauth 2) - OBT',
+        'spec_route': '/oauth/docs'
+    }
 
     with app.app_context():
         CORS(app, resources={r"/*": {"origins": "*"}})
+        _ = Redoc('./../spec/openapi/v1.0/bdc_oauth.yaml', app)
 
         # DB
         from bdc_oauth.utils.base_mongo import mongo
