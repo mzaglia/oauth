@@ -27,6 +27,7 @@ recursive-exclude doc/sphinx/_build *
 recursive-exclude docker *
 recursive-exclude examples *
 recursive-include bdc_oauth *.txt
+recursive-include bdc_oauth *.yaml
 recursive-include doc *.bat
 recursive-include doc *.css
 recursive-include doc *.py
