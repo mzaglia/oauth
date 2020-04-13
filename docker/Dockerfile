@@ -4,6 +4,8 @@ RUN apk update \
     && apk add --virtual build-dependencies \
         build-base
 
+RUN apk add openssl
+
 COPY . /app
 
 WORKDIR /app
