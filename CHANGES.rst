@@ -16,7 +16,7 @@ Version 0.2.0
 Released 2020-03-22
 
 - First experimental version.
-- Based on OAuth 2.0 Authorization Framework - RFC6749 <https://tools.ietf.org/html/rfc6749>`_.
+- Based on OAuth 2.0 Authorization Framework - `RFC6749 <https://tools.ietf.org/html/rfc6749>`_.
 - Documentation system based on Sphinx.
 - Package support through Setuptools.
 - Deploy on Docker containers.
