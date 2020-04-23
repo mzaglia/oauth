@@ -11,7 +11,7 @@ OBT OAuth 2.0
 =============
 
 .. image:: https://img.shields.io/badge/license-MIT-green
-        :target: https://github.com//brazil-data-cube/bdc-oauth/blob/master/LICENSE
+        :target: https://github.com//brazil-data-cube/oauth/blob/master/LICENSE
         :alt: Documentation Status
 
 .. image:: http://www.dpi.inpe.br/jenkins/view/brazil-data-cube/job/brazil-data-cube/job/oauth-tests/badge/icon
@@ -29,8 +29,8 @@ OBT OAuth 2.0
         :target: https://www.tidyverse.org/lifecycle/#experimental
         :alt: Package Lifecycle Status: Experimental
 
-.. image:: https://img.shields.io/github/tag/brazil-data-cube/bdc-oauth.svg
-        :target: https://github.com/brazil-data-cube/bdc-oauth/releases
+.. image:: https://img.shields.io/github/tag/brazil-data-cube/oauth.svg
+        :target: https://github.com/brazil-data-cube/oauth/releases
         :alt: Release
 
 .. image:: https://badges.gitter.im/brazil-data-cube/community.png
