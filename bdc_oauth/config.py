@@ -29,22 +29,30 @@ class Config():
         os.environ.get('MONGO_PASSWORD', 'mongo'),
         os.environ.get('MONGO_HOST', 'localhost'),
         os.environ.get('MONGO_PORT', '27018'),
-        os.environ.get('MONGO_DBNAME', 'bdc_oauth'))
+        os.environ.get('MONGO_DBNAME', 'bdc_oauth_test'))
     REDIS_URL = "redis://:{}@{}:{}/0".format(
         os.environ.get('REDIS_PASSWORD', 'passRedis'),
         os.environ.get('REDIS_HOST', 'redis'),
         os.environ.get('REDIS_PORT', '6379'))
 
+    BASE_PATH_TEMPLATES = os.getenv('BASE_PATH_TEMPLATES', os.path.join(BASE_DIR, 'utils/templates-email'.format(os.getcwd())))
+    SMTP_PORT = os.getenv('SMTP_PORT', 587)
+    SMTP_HOST = os.getenv('SMTP_HOST', 'smtp.somedomain.com')
+    EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS', 'youremail@email.com')
+    EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD', 'your_password')
+
+    BASEPATH_OAUTH_APP = os.getenv('BASEPATH_OAUTH_APP', 'http://oauth.dpi.inpe.br')
+
 
 class ProductionConfig(Config):
     """Production Mode."""
-
-    DEBUG = False
+    APM_APP_NAME = os.environ.get('APM_APP_NAME', None)
+    APM_HOST = os.environ.get('APM_HOST', None)
+    APM_SECRET_TOKEN = os.environ.get('APM_SECRET_TOKEN', None)
 
 
 class DevelopmentConfig(Config):
     """Development Mode."""
-
     DEVELOPMENT = True
 
 

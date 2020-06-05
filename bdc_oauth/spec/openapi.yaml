@@ -181,6 +181,83 @@ paths:
                   message:
                     type: string
 
+  /oauth/users/send-password:
+    post:
+      tags:
+        - "users"
+      summary: "Send Password"
+      description: "Send email to recover password"
+      requestBody:
+        description: "User password"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                  message:
+                    type: string
+
+  /oauth/users/valid-token-password/{token}:
+    post:
+      tags:
+        - "users"
+      summary: "Valid token/password"
+      description: "Valid token used to change password"
+      parameters:
+        - in: "path"
+          name: "token"
+          required: true
+          description: "Token used to change password"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+
+  /oauth/users/reset-password:
+    put:
+      tags:
+        - "users"
+      summary: "Reset Password"
+      description: "Change password with token sent by email"
+      requestBody:
+        description: "User password with Token"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/request/schemas/UserPasswordReset"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
   /oauth/users/client/{id}:
     get:
       tags:
@@ -198,12 +275,12 @@ paths:
           content:
             application/json:
               schema:
-                  type: object
-                  properties:
-                    users:
-                      type: array
-                      items:
-                        $ref: "#/response/schemas/User"
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: "#/response/schemas/User"
 
   /oauth/clients/:
     get:
@@ -624,6 +701,18 @@ request:
       type: object
       properties:
         old_password:
+          type: string
+          required: true
+        password:
+          type: string
+          required: true
+        confirm_password:
+          type: string
+          required: true
+    UserPasswordReset:
+      type: object
+      properties:
+        token:
           type: string
           required: true
         password:

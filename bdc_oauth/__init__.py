@@ -33,6 +33,15 @@ def create_app(config_name='DevelopmentConfig'):
         'spec_route': '/oauth/docs'
     }
 
+    if app.config.get('APM_APP_NAME') and app.config.get('APM_SECRET_TOKEN'):
+        from elasticapm.contrib.flask import ElasticAPM
+        app.config['ELASTIC_APM'] = {
+            'SERVICE_NAME': app.config['APM_APP_NAME'],
+            'SECRET_TOKEN': app.config['APM_SECRET_TOKEN'],
+            'SERVER_URL': app.config['APM_HOST']
+        }
+        ElasticAPM(app)
+
     with app.app_context():
         CORS(app, resources={r"/*": {"origins": "*"}})
         _ = Redoc('./spec/openapi.yaml', app)
@@ -54,7 +63,7 @@ def create_app(config_name='DevelopmentConfig'):
 
     return app
 
-app = create_app()
+app = create_app(os.environ.get('ENVIRONMENT', 'DevelopmentConfig'))
 
 __all__ = (
     '__version__',

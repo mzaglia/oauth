@@ -7,20 +7,23 @@
 #
 
 from copy import deepcopy
-from datetime import datetime
+from datetime import datetime, timedelta
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.exceptions import (InternalServerError, 
+from werkzeug.exceptions import (InternalServerError,
                                  NotFound, Conflict, Forbidden)
 
+from bdc_oauth.config import Config
 from bdc_oauth.utils.base_mongo import mongo
+from bdc_oauth.utils.helpers import random_string, send_email
 
 class UsersBusiness():
 
     @classmethod
     def init_infos(cls):
         return {
-            "model": mongo.db.users
+            "model": mongo.db.users,
+            "model_recover": mongo.db.recover_pass 
         }
 
     @classmethod
@@ -140,8 +143,83 @@ class UsersBusiness():
 
         try:
             new_pass = generate_password_hash(new_password)
-            model.update_one({"_id": ObjectId(id)}, {"$set": {"credential.password": new_pass}})
+            model.update_one({'_id': ObjectId(id)}, {'$set': {'credential.password': new_pass}})
             return True
         except Exception:
             return False
 
+
+    @classmethod
+    def send_token_password(cls, username):
+        model = cls.init_infos()['model']
+
+        user = model.find_one({'credential.username': username})
+        if not user:
+            raise NotFound('User not Found!')
+
+        m_recover = cls.init_infos()['model_recover']
+        recover = m_recover.find_one({'user_id': user['_id'], 'expired_at': {'$gt': datetime.now()}})
+        if recover:
+            try:
+                url = '{}/auth/recover-pass/{}'.format(Config.BASEPATH_OAUTH_APP, recover['token'])
+                status = send_email(user['email'], 'Recover password - OBT OAuth',
+                    'send-token-pass.html', name=user['name'], url=url)
+                if not status:
+                    raise InternalServerError('Error in send email, contact administrators!')
+
+                recover['expired_at'] = datetime.now() + timedelta(days=1)
+                m_recover.update_one({"_id": recover['_id']}, {"$set": recover})
+                return user
+            except Exception:
+                return False
+
+        secret_token = random_string(20)
+        recover = {
+            'token': secret_token,
+            'user_id': user['_id'],
+            'created_at': datetime.now(),
+            'expired_at': datetime.now() + timedelta(days=1)
+        }
+        try:
+            url = '{}/auth/recover-pass/{}'.format(Config.BASEPATH_OAUTH_APP, secret_token)
+            status = send_email(user['email'], 'Recover password - OBT OAuth',
+                'send-token-pass.html', name=user['name'], url=url)
+            if not status:
+                raise InternalServerError('Error in send email, contact administrators!')
+
+            m_recover.insert_one(recover)
+            return user
+        except Exception:
+            return False
+
+
+    @classmethod
+    def valid_token_password(cls, token):
+        m_recover = cls.init_infos()['model_recover']
+        recover = m_recover.find_one({'token': token, 'expired_at': {'$gt': datetime.now()}})
+        return recover
+
+    
+    @classmethod
+    def reset_password(cls, password, token):
+        m_recover = cls.init_infos()['model_recover']
+        recover = m_recover.find_one({'token': token, 'expired_at': {'$gt': datetime.now()}})
+        if not recover:
+            raise Forbidden('Token invalid or expired!')
+        
+        model = cls.init_infos()['model']
+        user = cls.get_by_id(str(recover['user_id']))
+        try:
+            new_pass = generate_password_hash(password)
+            model.update_one({'_id': recover['user_id']}, {'$set': {'credential.password': new_pass}})
+        except Exception as e:
+            return False
+
+        try:
+            m_recover.update_one({'_id': recover['_id']}, {'$set': {'expired_at': datetime.now()}})
+
+            send_email(user['email'], 'Password changed successfully - OBT OAuth',
+                'recover-pass-success.html', name=user['name'])
+            return True
+        except Exception:
+            return False

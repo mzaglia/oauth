@@ -42,7 +42,7 @@ setup_requires = [
 ]
 
 install_requires = [
-    'bdc-core @ git+git://github.com/brazil-data-cube/bdc-core.git@v0.2.0#egg=bdc-core',
+    'bdc-core @ git+git://github.com/brazil-data-cube/bdc-core.git@b-0.2#egg=bdc-core',
     'Flask>=1.0.3',
     'flask_bcrypt==0.7.1',
     'flask_restplus==0.12.1',
@@ -59,7 +59,8 @@ install_requires = [
     'flask_pymongo==2.3.0',
     'flask_redis==0.4.0',
     'cryptography==2.7',
-    'flask-redoc==0.1.0'
+    'flask-redoc==0.1.0',
+    'elastic-apm[flask]==5.6.0'
 ]
 
 packages = find_packages()
