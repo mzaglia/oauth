@@ -161,7 +161,7 @@ class UsersBusiness():
         recover = m_recover.find_one({'user_id': user['_id'], 'expired_at': {'$gt': datetime.now()}})
         if recover:
             try:
-                url = '{}/recover-pass/{}'.format(Config.BASEPATH_OAUTH_APP, recover['token'])
+                url = '{}/auth/recover-pass/{}'.format(Config.BASEPATH_OAUTH_APP, recover['token'])
                 status = send_email(user['email'], 'Recover password - OBT OAuth',
                     'send-token-pass.html', name=user['name'], url=url)
                 if not status:
@@ -181,7 +181,7 @@ class UsersBusiness():
             'expired_at': datetime.now() + timedelta(days=1)
         }
         try:
-            url = '{}/recover-pass/{}'.format(Config.BASEPATH_OAUTH_APP, secret_token)
+            url = '{}/auth/recover-pass/{}'.format(Config.BASEPATH_OAUTH_APP, secret_token)
             status = send_email(user['email'], 'Recover password - OBT OAuth',
                 'send-token-pass.html', name=user['name'], url=url)
             if not status:
