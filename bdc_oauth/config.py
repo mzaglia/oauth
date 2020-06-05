@@ -29,7 +29,7 @@ class Config():
         os.environ.get('MONGO_PASSWORD', 'mongo'),
         os.environ.get('MONGO_HOST', 'localhost'),
         os.environ.get('MONGO_PORT', '27018'),
-        os.environ.get('MONGO_DBNAME', 'bdc_oauth'))
+        os.environ.get('MONGO_DBNAME', 'bdc_oauth_test'))
     REDIS_URL = "redis://:{}@{}:{}/0".format(
         os.environ.get('REDIS_PASSWORD', 'passRedis'),
         os.environ.get('REDIS_HOST', 'redis'),
@@ -49,7 +49,6 @@ class ProductionConfig(Config):
     APM_APP_NAME = os.environ.get('APM_APP_NAME', None)
     APM_HOST = os.environ.get('APM_HOST', None)
     APM_SECRET_TOKEN = os.environ.get('APM_SECRET_TOKEN', None)
-    DEBUG = False
 
 
 class DevelopmentConfig(Config):

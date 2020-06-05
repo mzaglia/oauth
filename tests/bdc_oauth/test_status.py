@@ -14,4 +14,4 @@ def test_status_page(test_client):
     assert response.status_code == 200
     r_json = json.loads(response.data)
     assert 'description' in r_json
-    assert r_json['version'] == '0.2.0'
+    assert r_json['version'] == '0.4.0'

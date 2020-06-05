@@ -12,6 +12,7 @@ from bson.objectid import ObjectId
 from fixture import test_client
 from bdc_oauth.users.business import UsersBusiness
 from bdc_oauth.utils.base_mongo import mongo
+from bdc_oauth.utils.helpers import random_string
 
 USER_BASE = dict(
     name='Admin',
@@ -465,3 +466,64 @@ def test_change_password_403_admin_token(test_client):
         json=dict(),
         headers=dict(Authorization='Bearer {}'.format(access_token)))
     assert response.status_code == 403
+
+
+#################
+## RESET PASSWORD
+def test_save_token_password(test_client):
+    _, user_info = setUp()
+
+    response = test_client.post(
+        '/oauth/users/send-password',
+        json=dict(
+            username=user_info['credential']['username']
+        ))
+    assert response.status_code == 200
+
+    model = mongo.db.recover_pass
+    recover = model.find_one({"user_id": user_info['_id']})
+    token = recover['token']
+    response = test_client.post(
+        '/oauth/users/valid-token-password/{}'.format(token))
+    assert response.status_code == 200
+
+def test_token_password_invalid(test_client):
+    _, user_info = setUp()
+
+    response = test_client.post(
+        '/oauth/users/send-password',
+        json=dict(
+            username=user_info['credential']['username']
+        ))
+    assert response.status_code == 200
+
+    token = random_string(20)
+    response = test_client.post(
+        '/oauth/users/valid-token-password/{}'.format(token))
+    assert response.status_code != 200
+
+def test_reset_password(test_client):
+    _, user_info = setUp()
+
+    response = test_client.post(
+        '/oauth/users/send-password',
+        json=dict(
+            username=user_info['credential']['username']
+        ))
+    assert response.status_code == 200
+
+    model = mongo.db.recover_pass
+    recover = model.find_one({"user_id": user_info['_id']})
+    token = recover['token']
+    response = test_client.put(
+        '/oauth/users/reset-password',
+        json=dict(
+            token=token,
+            password='abcd12341',
+            confirm_password='abcd12341'
+        ))
+    assert response.status_code == 200
+
+    response = test_client.post(
+        '/oauth/users/valid-token-password/{}'.format(token))
+    assert response.status_code != 200

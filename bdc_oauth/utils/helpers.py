@@ -72,6 +72,9 @@ def kid_from_crypto_key(private_key_path, key_type='EC'):
 
 
 def send_email(to: str, subject: str, template: str, **kwargs):
+    if not os.environ.get('ENVIRONMENT') or os.environ['ENVIRONMENT'] == 'TestingConfig':
+        return True
+
     try:
         email = EmailBusiness(
             '', to, subject, template,
