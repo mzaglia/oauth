@@ -59,7 +59,8 @@ install_requires = [
     'flask_pymongo==2.3.0',
     'flask_redis==0.4.0',
     'cryptography==2.7',
-    'flask-redoc==0.1.0'
+    'flask-redoc==0.1.0',
+    'elastic-apm[flask]==5.6.0'
 ]
 
 packages = find_packages()

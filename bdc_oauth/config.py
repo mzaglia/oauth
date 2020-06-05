@@ -38,13 +38,14 @@ class Config():
 
 class ProductionConfig(Config):
     """Production Mode."""
-
+    APM_APP_NAME = os.environ.get('APM_APP_NAME', None)
+    APM_HOST = os.environ.get('APM_HOST', None)
+    APM_SECRET_TOKEN = os.environ.get('APM_SECRET_TOKEN', None)
     DEBUG = False
 
 
 class DevelopmentConfig(Config):
     """Development Mode."""
-
     DEVELOPMENT = True
 
 
