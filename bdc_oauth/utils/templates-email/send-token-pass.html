@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>OBT OAuth - Recover password</title>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: flex-start;
+            padding: 25px 50px;
+            flex-flow: column;
+        }
+
+        h1 {
+            font-size: 1.3em;
+            margin: 0 0 10px 0;
+        }
+
+        h2 {
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .content {
+            padding: 15px;
+            background: #EEE;
+            border-radius: 10px;
+        }
+
+        p.footer {
+            font-size: 0.85em;
+            color: #666666;
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Hello, ${args['name']}!</h1>
+    <h2>We received your request to change your password in <b>OBT-OAuth.</b></h2>
+
+    <div class="content">
+        <p>
+            - Click on the link to continue the process: <a href="${args['url']}">${args['url']}</a>
+        </p>
+    </div>
+
+    <p class="footer">OBT OAuth - 2020</p>
+</body>
+
+</html>

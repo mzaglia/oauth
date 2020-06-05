@@ -47,6 +47,17 @@ def user_update():
     }
 
 
+def user_send_password():
+    return {
+        'username': {"type": "string", "empty": False, "required": True}
+    }
+
+
+def user_reset_password():
+    return dict(user_password(), **{
+        'token': {"type": "string", "empty": False, "required": True},
+    })
+
 
 def validate(data, type_schema, validate_password=False):
     schema = eval('{}()'.format(type_schema))

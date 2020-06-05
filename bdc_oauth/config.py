@@ -35,6 +35,14 @@ class Config():
         os.environ.get('REDIS_HOST', 'redis'),
         os.environ.get('REDIS_PORT', '6379'))
 
+    BASE_PATH_TEMPLATES = os.getenv('BASE_PATH_TEMPLATES', os.path.join(BASE_DIR, 'utils/templates-email'.format(os.getcwd())))
+    SMTP_PORT = os.getenv('SMTP_PORT', 587)
+    SMTP_HOST = os.getenv('SMTP_HOST', 'smtp.somedomain.com')
+    EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS', 'youremail@email.com')
+    EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD', 'your_password')
+
+    BASEPATH_OAUTH_APP = os.getenv('BASEPATH_OAUTH_APP', 'http://oauth.dpi.inpe.br')
+
 
 class ProductionConfig(Config):
     """Production Mode."""

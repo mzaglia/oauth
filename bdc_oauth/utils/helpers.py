@@ -13,6 +13,9 @@ import os
 import subprocess
 import threading
 import webbrowser
+from bdc_core.email.business import EmailBusiness
+
+from bdc_oauth.config import Config
 
 def open_brower(url, time=1):
     """
@@ -66,3 +69,21 @@ def kid_from_crypto_key(private_key_path, key_type='EC'):
 
     algorithm.update(der)
     return key_id_encode(algorithm.digest()[:30])
+
+
+def send_email(to: str, subject: str, template: str, **kwargs):
+    try:
+        email = EmailBusiness(
+            '', to, subject, template,
+            body_args=kwargs,
+            BASE_PATH_TEMPLATES=Config.BASE_PATH_TEMPLATES,
+            SMTP_PORT=Config.SMTP_PORT,
+            SMTP_HOST=Config.SMTP_HOST,
+            EMAIL_ADDRESS=Config.EMAIL_ADDRESS,
+            EMAIL_PASSWORD=Config.EMAIL_PASSWORD,
+        )
+        email.send()
+        return True
+
+    except Exception:
+        return False

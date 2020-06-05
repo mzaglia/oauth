@@ -136,3 +136,55 @@ class UserPassController(APIResource):
         return {
             "message": "Password updated!"
         }
+
+@api.route('/send-password')
+class UserSendPassController(APIResource):
+
+    def post(self):
+        """
+        send email to enable function to change user password
+        """
+        data, status = validate(request.json, 'user_send_password')
+        if status is False:
+            raise BadRequest(json.dumps(data))
+
+        user = UsersBusiness.send_token_password(**data)
+        if not user:
+            raise InternalServerError('Error in send email!')
+
+        return {
+            "email": user['email'],
+            "message": "We send a link to your email!"
+        }
+
+
+@api.route('/valid-token-password/<token>')
+class UserValidPassController(APIResource):
+
+    def post(self, token):
+        status = UsersBusiness.valid_token_password(token)
+        if not status:
+            raise InternalServerError('Token not found or expired!')
+        return {
+            "message": "Successfully!"
+        }
+
+
+@api.route('/reset-password')
+class UserResetPassController(APIResource):
+
+    def post(self):
+        """
+        change user password by secret token
+        """
+        data, status = validate(request.json, 'user_reset_password', validate_password=True)
+        if status is False:
+            raise BadRequest(json.dumps(data))
+
+        status = UsersBusiness.reset_password(data['password'], data['token'])
+        if not status:
+            raise InternalServerError('Error updating user password!')
+
+        return {
+            "message": "Password updated!"
+        }
