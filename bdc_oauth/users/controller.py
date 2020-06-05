@@ -166,6 +166,7 @@ class UserValidPassController(APIResource):
         if not status:
             raise InternalServerError('Token not found or expired!')
         return {
+            "status": bool(status),
             "message": "Successfully!"
         }
 
@@ -173,7 +174,7 @@ class UserValidPassController(APIResource):
 @api.route('/reset-password')
 class UserResetPassController(APIResource):
 
-    def post(self):
+    def put(self):
         """
         change user password by secret token
         """
